@@ -126,11 +126,10 @@ contract CapitalTechCrowdsale is Ownable{
     vault.deposit.value(msg.value)(msg.sender);
   }
   function finalize() onlyOwner public {
-    require(!hasEnded());
-    finalization();
     emit Finalized();
     stage = "ended";
     sale_state = false;
+    finalization();    
   }
   function powerUpContract() public onlyOwner{
     require(!sale_state);
