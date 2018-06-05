@@ -52,11 +52,10 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
     //crowdsaleWallet.should.be.equal(owner);
   });
 
-  it("The crowdale should be started", function() {
-    return CapitalTechCrowdsale.deployed().then(function(instance) {
-      return instance.hasEnded();
-    }).then(function(ended) {
-      assert.equal(ended, false, "The crowdsale has started");
-    });
+  it("The crowdale should be started", async function() {
+    let instance = await CapitalTechCrowdsale.deployed();
+    let ended = await instance.hasEnded.call();
+
+    assert.equal(ended, false, "The crowdsale has started");
   });
 });
