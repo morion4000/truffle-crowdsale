@@ -45,6 +45,7 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
     const vaultWallet = await this.crowdsale.vault();
 
     console.log(owner);
+    console.log(investor);
     console.log(crowdsaleWallet);
     console.log(vaultWallet);
 
@@ -52,10 +53,17 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
     //crowdsaleWallet.should.be.equal(owner);
   });
 
-  it("The crowdale should be started", async function() {
+  it("The crowdsale should be started", async function() {
     let instance = await CapitalTechCrowdsale.deployed();
     let ended = await instance.hasEnded.call();
 
     assert.equal(ended, false, "The crowdsale has started");
+  });
+
+  it("Buy", async function() {
+    let instance = await CapitalTechCrowdsale.deployed();
+    let purchase = await instance.buyTokens(investor, {from: investor, value: 100000000000000000});
+
+    assert.equal(purchase.logs.length, 1, "The coins were minted");
   });
 });
