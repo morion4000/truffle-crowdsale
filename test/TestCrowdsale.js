@@ -48,6 +48,7 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
     const maxContributionPerAddress = await this.crowdsale.maxContributionPerAddress();
     const minInvestment = await this.crowdsale.minInvestment();
     const walletCrowdsale = await this.crowdsale.wallet();
+    const weiRaised = await this.crowdsale.weiRaised();
 
     startTime.toNumber().should.be.greaterThan(0);
     endTime.toNumber().should.be.greaterThan(0);
@@ -59,6 +60,7 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
     maxContributionPerAddress.div(1e18).toNumber().should.be.equal(1500);
     minInvestment.div(1e18).toNumber().should.be.equal(0.01);
     walletCrowdsale.should.be.equal(owner);
+    weiRaised.toNumber().should.be.equal(0);
   });
 
   it("The crowdsale should be started", async function() {
@@ -68,10 +70,24 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
     assert.equal(ended, false, "The crowdsale has started");
   });
 
-  it("Buy", async function() {
+  it("The investor should be able to buy tokens", async function() {
+    // TODO: Use the contract instance created during beforeEach
     let instance = await CapitalTechCrowdsale.deployed();
+    // TODO: Can someone buy tokens in behalf of someone else?
     let purchase = await instance.buyTokens(investor, {from: investor, value: 100000000000000000});
 
-    assert.equal(purchase.logs.length, 1, "The coins were minted");
+    // TODO: Check more information on the transaction
+    purchase.logs.length.should.be.equal(1);
+
+    const callDistributed = await instance.callDistributed();
+    const callgDistributed = await instance.callgDistributed();
+    const weiRaised = await instance.weiRaised();
+    const userContribution = await instance.getUserContribution(investor);
+
+    callDistributed.div(1e18).toNumber().should.be.greaterThan(118);
+    callgDistributed.div(1e18).toNumber().should.be.greaterThan(23895);
+    weiRaised.div(1e18).toNumber().should.be.equal(0.1);
+    userContribution.toNumber().should.be.equal(0.1);
+    // TODO: Check vault balance
   });
 });
