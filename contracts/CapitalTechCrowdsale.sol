@@ -77,6 +77,8 @@ contract CapitalTechCrowdsale is Ownable{
     uint256 callg_tokens = call_tokens.mul(200);
     _postValidatePurchase(call_tokens, callg_tokens);
     weiRaised = weiRaised.add(weiAmount);
+    callDistributed = callDistributed.add(call_tokens);
+    callgDistributed = callDistributed.add(callg_tokens);
     _processPurchase(_beneficiary, call_tokens, callg_tokens);
     emit TokenPurchase(msg.sender, _beneficiary, weiAmount, call_tokens, callg_tokens);
     _updatePurchasingState(_beneficiary, weiAmount);
@@ -141,6 +143,7 @@ contract CapitalTechCrowdsale is Ownable{
     stage = "private";
     callDistributed = 0;
     callgDistributed = 0;
+    weiRaised = 0;
     callSoftCap = 10710000000000000000000000;
     callgSoftCap = 2142000000000000000000000000;
     callHardCap = 52500000000000000000000000;
