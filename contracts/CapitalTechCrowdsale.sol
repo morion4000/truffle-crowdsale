@@ -21,7 +21,7 @@ contract CapitalTechCrowdsale is Ownable{
   uint256 public endTime;
   uint256 public weiRaised;
   uint256 public sale_period;
-  uint256 public minInvestment;  
+  uint256 public minInvestment;
   bool public sale_state = false;
   string public stage;
   mapping(address => uint256) public contributions;
@@ -29,7 +29,7 @@ contract CapitalTechCrowdsale is Ownable{
   uint256 public callgSoftCap;
   uint256 public callHardCap;
   uint256 public callgHardCap;
-  uint256 public callDistributed;  
+  uint256 public callDistributed;
   uint256 public callgDistributed;
   event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount_call, uint256 amount_callg);
   event Finalized();
@@ -40,12 +40,13 @@ contract CapitalTechCrowdsale is Ownable{
     require(_fiatcontract != address(0));
     token_call = _token_call;
     token_callg = _token_callg;
+    wallet = _wallet;
     fiat_contract = FiatContract(_fiatcontract);
     vault = new RefundVault(_wallet);
   }
   function getUserContribution(address _beneficiary) public view returns (uint256) {
     return contributions[_beneficiary];
-  }  
+  }
   function calculateRate(uint256 _amount) public view returns(uint256) {
     uint256 tokenPrice = fiat_contract.USD(0);
     if(startTime.add(15 days) >= block.timestamp) {
@@ -76,11 +77,13 @@ contract CapitalTechCrowdsale is Ownable{
     uint256 callg_tokens = call_tokens.mul(200);
     _postValidatePurchase(call_tokens, callg_tokens);
     weiRaised = weiRaised.add(weiAmount);
+    callDistributed = callDistributed.add(call_tokens);
+    callgDistributed = callDistributed.add(callg_tokens);
     _processPurchase(_beneficiary, call_tokens, callg_tokens);
     emit TokenPurchase(msg.sender, _beneficiary, weiAmount, call_tokens, callg_tokens);
     _updatePurchasingState(_beneficiary, weiAmount);
     _forwardFunds();
-  }  
+  }
   function _getTokenAmount(uint256 _weiAmount) internal view returns (uint256) {
     uint256 tokenPrice = fiat_contract.USD(0);
     if(startTime.add(15 days) >= block.timestamp) {
@@ -120,7 +123,7 @@ contract CapitalTechCrowdsale is Ownable{
     require(MintableToken(token_callg).mint(_beneficiary, _callgAmount));
   }
   function _updatePurchasingState(address _beneficiary, uint256 _weiAmount) internal {
-    contributions[_beneficiary] = contributions[_beneficiary].add(_weiAmount);    
+    contributions[_beneficiary] = contributions[_beneficiary].add(_weiAmount);
   }
   function _forwardFunds() internal {
     vault.deposit.value(msg.value)(msg.sender);
@@ -129,22 +132,23 @@ contract CapitalTechCrowdsale is Ownable{
     emit Finalized();
     stage = "ended";
     sale_state = false;
-    finalization();    
+    finalization();
   }
   function powerUpContract() public onlyOwner{
     require(!sale_state);
     startTime = block.timestamp;
     sale_period = 75 days;
-    endTime = block.timestamp.add(sale_period);    
+    endTime = block.timestamp.add(sale_period);
     sale_state = true;
     stage = "private";
     callDistributed = 0;
     callgDistributed = 0;
+    weiRaised = 0;
     callSoftCap = 10710000000000000000000000;
     callgSoftCap = 2142000000000000000000000000;
     callHardCap = 52500000000000000000000000;
     callgHardCap = 10500000000000000000000000000;
-    maxContributionPerAddress = 1500 ether;	
+    maxContributionPerAddress = 1500 ether;
     minInvestment = 0.01 ether;
   }
   function extendCrowdsale(uint date) public onlyOwner {
@@ -156,8 +160,8 @@ contract CapitalTechCrowdsale is Ownable{
     require(callDistributed.add(_amount) <= callHardCap);
     require(callgDistributed.add(_amount.mul(200)) <= callgHardCap);
     require(MintableToken(token_call).mint(_to, _amount));
-    require(MintableToken(token_callg).mint(_to, _amount.mul(200))); 
-  }  
+    require(MintableToken(token_callg).mint(_to, _amount.mul(200)));
+  }
   function claimRefund() public {
     require(!sale_state);
     require(!goalReached());
