@@ -25,7 +25,6 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
   });
 
   beforeEach(async function() {
-
     this.crowdsale = await CapitalTechCrowdsale.new(owner, FiatContract.address, CALLToken.address, CALLGToken.address);
 
     this.call_token = CALLToken.at(await this.crowdsale.token_call());
@@ -41,21 +40,30 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
 
     const startTime = await this.crowdsale.startTime();
     const endTime = await this.crowdsale.endTime();
-    const crowdsaleWallet = await this.crowdsale.wallet();
-    const vaultWallet = await this.crowdsale.vault();
+    const sale_period = await this.crowdsale.sale_period();
+    const sale_state = await this.crowdsale.sale_state();
+    const stage = await this.crowdsale.stage();
+    const callDistributed = await this.crowdsale.callDistributed();
+    const callgDistributed = await this.crowdsale.callgDistributed();
+    const maxContributionPerAddress = await this.crowdsale.maxContributionPerAddress();
+    const minInvestment = await this.crowdsale.minInvestment();
+    const walletCrowdsale = await this.crowdsale.wallet();
 
-    console.log(owner);
-    console.log(investor);
-    console.log(crowdsaleWallet);
-    console.log(vaultWallet);
-
-    //startTime.should.be.bignumber.greaterThan(this.now);
-    //crowdsaleWallet.should.be.equal(owner);
+    startTime.toNumber().should.be.greaterThan(0);
+    endTime.toNumber().should.be.greaterThan(0);
+    sale_period.toNumber().should.be.equal(6480000); // 75 days
+    sale_state.should.be.equal(true);
+    stage.should.be.equal('private');
+    callDistributed.toNumber().should.be.equal(0);
+    callgDistributed.toNumber().should.be.equal(0);
+    maxContributionPerAddress.div(1e18).toNumber().should.be.equal(1500);
+    minInvestment.div(1e18).toNumber().should.be.equal(0.01);
+    walletCrowdsale.should.be.equal(owner);
   });
 
   it("The crowdsale should be started", async function() {
-    let instance = await CapitalTechCrowdsale.deployed();
-    let ended = await instance.hasEnded.call();
+    // let instance = await CapitalTechCrowdsale.deployed();
+    let ended = await this.crowdsale.hasEnded.call();
 
     assert.equal(ended, false, "The crowdsale has started");
   });
