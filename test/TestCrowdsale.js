@@ -54,8 +54,25 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
     minInvestment.div(1e18).toNumber().should.be.equal(0.01);
     walletCrowdsale.should.be.equal(owner);
     weiRaised.toNumber().should.be.equal(0);
-    //callSoftCap.toNumber().should.be.equal(10710000);
-    //callgSoftCap.toNumber().should.be.equal(10710000);
+    callSoftCap.div(1e18).toNumber().should.be.equal(10710000);
+    callgSoftCap.div(1e18).toNumber().should.be.equal(2142000000);
+  });
+
+  it("The price should be right for PRIVATE_SALE", async function() {
+    let instance = await CapitalTechCrowdsale.deployed();
+    let amount = new BigNumber(1).mul(1e18);
+    const result = await instance.getAmountForCurrentStage(amount);
+
+    result.div(1e18).toNumber().should.be.equal(1698.29457259);
+  });
+
+  it("The hardcap should be right for PRIVATE_SALE", async function() {
+    let instance = await CapitalTechCrowdsale.deployed();
+
+    const hardcap = await instance.getHardCap();
+
+    hardcap[0].div(1e18).toNumber().should.be.equal(3123750);
+    hardcap[1].div(1e18).toNumber().should.be.equal(62475000);
   });
 
   it("The investor should be able to buy tokens in PRIVATE_SALE", async function() {
@@ -63,9 +80,6 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
     let instance = await CapitalTechCrowdsale.deployed();
     let amount = new BigNumber(0.1).mul(1e18);
     let purchase = await instance.buyTokens(investor, {from: investor, value: amount});
-
-    // TODO: Check more information on the transaction
-    purchase.logs.length.should.be.equal(1);
 
     const callDistributed = await instance.callDistributed();
     const callgDistributed = await instance.callgDistributed();
@@ -79,8 +93,8 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
     // TODO: Check vault balance
   });
 
-  it("It should increase time by 7 days", async function() {
-    var duration = 7 * 60 * 60 * 24;
+  it("It should increase time by 8 days", async function() {
+    var duration = 8 * 60 * 60 * 24;
 
     increaseTime(duration);
   });
@@ -95,8 +109,43 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
     stage.toNumber().should.be.equal(1);
   });
 
-  it("It should increase time by 7 days", async function() {
-    var duration = 7 * 60 * 60 * 24;
+  it("The price should be right for PRE_SALE", async function() {
+    let instance = await CapitalTechCrowdsale.deployed();
+    let amount = new BigNumber(1).mul(1e18);
+    const result = await instance.getAmountForCurrentStage(amount);
+
+    result.div(1e18).toNumber().should.be.equal(1188.80605948);
+  });
+
+  it("The hardcap should be right for PRE_SALE", async function() {
+    let instance = await CapitalTechCrowdsale.deployed();
+
+    const hardcap = await instance.getHardCap();
+
+    hardcap[0].div(1e18).toNumber().should.be.equal(7586250);
+    hardcap[1].div(1e18).toNumber().should.be.equal(1517250000);
+  });
+
+  it("The investor should be able to buy tokens in PRE_SALE", async function() {
+    // TODO: Use the contract instance created during beforeEach
+    let instance = await CapitalTechCrowdsale.deployed();
+    let amount = new BigNumber(0.1).mul(1e18);
+    let purchase = await instance.buyTokens(investor, {from: investor, value: amount});
+
+    const callDistributed = await instance.callDistributed();
+    const callgDistributed = await instance.callgDistributed();
+    const weiRaised = await instance.weiRaised();
+    const userContribution = await instance.getUserContribution(investor);
+
+    callDistributed.div(1e18).toNumber().should.be.equal(237.76121188);
+    callgDistributed.div(1e18).toNumber().should.be.equal(24013.88239988);
+    weiRaised.div(1e18).toNumber().should.be.equal(0.2);
+    userContribution.div(1e18).toNumber().should.be.equal(0.2);
+    // TODO: Check vault balance
+  });
+
+  it("It should increase time by 8 days", async function() {
+    var duration = 8 * 60 * 60 * 24;
 
     increaseTime(duration);
   });
@@ -104,7 +153,7 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
   it("The stage should advance to MAIN_SALE_1", async function() {
     // TODO: Use the contract instance created during beforeEach
     let instance = await CapitalTechCrowdsale.deployed();
-    let call = await instance.updateStage()
+    let call = await instance.updateStage();
 
     const stage = await instance.stage();
 

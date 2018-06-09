@@ -29,9 +29,11 @@ contract CapitalTechCrowdsale is Ownable {
   uint256 public callgSoftCap;
   uint256 public callDistributed;
   uint256 public callgDistributed;
-  uint8 public constant decimals = 18;
+  uint256 public constant decimals = 18;
   event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount_call, uint256 amount_callg);
   event TokenTransfer(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount_call, uint256 amount_callg);
+  event StageChanged(stages stage, stages next_stage, uint stageStartTime);
+  event GoalReached(uint callDistributed, uint callgDistributed);
   event Finalized();
   function () external payable {
     buyTokens(msg.sender);
@@ -69,7 +71,7 @@ contract CapitalTechCrowdsale is Ownable {
   function getUserContribution(address _beneficiary) public view returns (uint256) {
     return contributions[_beneficiary];
   }
-  function getPriceForCurrentState(uint256 _amount) public view returns(uint256) {
+  function getAmountForCurrentStage(uint256 _amount) public view returns(uint256) {
     uint256 tokenPrice = fiat_contract.USD(0);
     if(stage == stages.PRIVATE_SALE) {
       tokenPrice = tokenPrice.mul(35).div(10 ** 8);
@@ -101,25 +103,25 @@ contract CapitalTechCrowdsale is Ownable {
     }
     return next_stage;
   }
-  function _getHardCap(stages _stage) internal view returns (uint, uint) {
+  function getHardCap() public view returns (uint, uint) {
     uint hardcap_call;
     uint hardcap_callg;
-    if (_stage == stages.PRIVATE_SALE) {
+    if (stage == stages.PRIVATE_SALE) {
       hardcap_call = 3123750;
       hardcap_callg = 62475000;
-    } else if (_stage == stages.PRE_SALE) {
+    } else if (stage == stages.PRE_SALE) {
       hardcap_call = 7586250;
       hardcap_callg = 1517250000;
-    } else if (_stage == stages.MAIN_SALE_1) {
+    } else if (stage == stages.MAIN_SALE_1) {
       hardcap_call = 13566000;
       hardcap_callg = 2713200000;
-    } else if (_stage == stages.MAIN_SALE_2) {
+    } else if (stage == stages.MAIN_SALE_2) {
       hardcap_call = 10714500;
       hardcap_callg = 2034900000;
-    } else if (_stage == stages.MAIN_SALE_3) {
+    } else if (stage == stages.MAIN_SALE_3) {
       hardcap_call = 6783000;
       hardcap_callg = 1356600000;
-    } else if (_stage == stages.MAIN_SALE_4) {
+    } else if (stage == stages.MAIN_SALE_4) {
       hardcap_call = 3391500;
       hardcap_callg = 678300000;
     }
@@ -129,10 +131,11 @@ contract CapitalTechCrowdsale is Ownable {
   }
   function updateStage() public {
     uint _duration = stages_duration[uint(stage)];
-    (uint _hardcapCall, uint _hardcapCallg) = _getHardCap(stage);
+    (uint _hardcapCall, uint _hardcapCallg) = getHardCap();
     if(stageStartTime.add(_duration) >= block.timestamp || callDistributed >= _hardcapCall || callgDistributed >= _hardcapCallg) {
       stages next_stage = _getNextStage();
       if (next_stage != stages.MAIN_SALE_4) {
+        emit StageChanged(stage, next_stage, stageStartTime);
         stage = next_stage;
         stageStartTime = block.timestamp;
       } else {
@@ -151,7 +154,7 @@ contract CapitalTechCrowdsale is Ownable {
     require(_beneficiary != address(0));
     require(weiAmount >= minInvestment);
     require(contributions[_beneficiary].add(weiAmount) <= maxContributionPerAddress);
-    uint256 call_tokens = getPriceForCurrentState(weiAmount);
+    uint256 call_tokens = getAmountForCurrentStage(weiAmount);
     uint256 callg_tokens = call_tokens.mul(200);
     //require(callDistributed.add(call_tokens) <= callHardCap);
     //require(callgDistributed.add(callg_tokens) <= callgHardCap);
@@ -195,6 +198,7 @@ contract CapitalTechCrowdsale is Ownable {
   function goalReached() public returns (bool) {
     require(callDistributed >= callSoftCap);
     require(callgDistributed >= callgSoftCap);
+    emit GoalReached(callDistributed, callgDistributed);
   }
   function finalization() internal {
     require(!is_finalized);
