@@ -29,6 +29,7 @@ contract CapitalTechCrowdsale is Ownable {
   uint256 public callgSoftCap;
   uint256 public callDistributed;
   uint256 public callgDistributed;
+  uint8 public constant decimals = 18;
   event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount_call, uint256 amount_callg);
   event TokenTransfer(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount_call, uint256 amount_callg);
   event Finalized();
@@ -53,8 +54,8 @@ contract CapitalTechCrowdsale is Ownable {
     callDistributed = 0;
     callgDistributed = 0;
     weiRaised = 0;
-    callSoftCap = 10710000000000000000000000;
-    callgSoftCap = 2142000000000000000000000000;
+    callSoftCap = 10710000 * 10 ** decimals;
+    callgSoftCap = 2142000000 * 10 ** decimals;
     maxContributionPerAddress = 1500 ether;
     minInvestment = 0.01 ether;
     is_finalized = false;
@@ -71,21 +72,17 @@ contract CapitalTechCrowdsale is Ownable {
   function getPriceForCurrentState(uint256 _amount) public view returns(uint256) {
     uint256 tokenPrice = fiat_contract.USD(0);
     if(stage == stages.PRIVATE_SALE) {
-        tokenPrice = tokenPrice.mul(50).div(10 ** 8);
-    } else if(stage == stages.PRE_SALE) {
-        tokenPrice = tokenPrice.mul(70).div(10 ** 8);
-    } else if(stage == stages.MAIN_SALE_1) {
-        tokenPrice = tokenPrice.mul(80).div(10 ** 8);
-    } else if(stage == stages.MAIN_SALE_2) {
-        tokenPrice = tokenPrice.mul(90).div(10 ** 8);
-    } else if(stage == stages.MAIN_SALE_3) {
-        tokenPrice = tokenPrice.mul(100).div(10 ** 8);
-    } else if(stage == stages.MAIN_SALE_4) {
-      // TODO: What is the multiplier for MAIN_SALE_4
-      tokenPrice = tokenPrice.mul(100).div(10 ** 8);
-    } else {
-      // TODO: Why this condition?
       tokenPrice = tokenPrice.mul(35).div(10 ** 8);
+    } else if(stage == stages.PRE_SALE) {
+      tokenPrice = tokenPrice.mul(50).div(10 ** 8);
+    } else if(stage == stages.MAIN_SALE_1) {
+      tokenPrice = tokenPrice.mul(70).div(10 ** 8);
+    } else if(stage == stages.MAIN_SALE_2) {
+      tokenPrice = tokenPrice.mul(80).div(10 ** 8);
+    } else if(stage == stages.MAIN_SALE_3) {
+      tokenPrice = tokenPrice.mul(90).div(10 ** 8);
+    } else if(stage == stages.MAIN_SALE_4) {
+      tokenPrice = tokenPrice.mul(100).div(10 ** 8);
     }
     return _amount.div(tokenPrice).mul(10 ** 10);
   }
@@ -99,10 +96,7 @@ contract CapitalTechCrowdsale is Ownable {
       next_stage = stages.MAIN_SALE_2;
     } else if (stage == stages.MAIN_SALE_2) {
       next_stage = stages.MAIN_SALE_3;
-    } else if (stage == stages.MAIN_SALE_3) {
-      next_stage = stages.MAIN_SALE_4;
     } else {
-      // TODO: what do in case next stage doesn't match anything else
       next_stage = stages.MAIN_SALE_4;
     }
     return next_stage;
@@ -111,29 +105,27 @@ contract CapitalTechCrowdsale is Ownable {
     uint hardcap_call;
     uint hardcap_callg;
     if (_stage == stages.PRIVATE_SALE) {
-      hardcap_call = 10710000000000000000000000;
-      hardcap_callg = 10710000000000000000000000;
+      hardcap_call = 3123750;
+      hardcap_callg = 62475000;
     } else if (_stage == stages.PRE_SALE) {
-      hardcap_call = 10710000000000000000000000;
-      hardcap_callg = 10710000000000000000000000;
+      hardcap_call = 7586250;
+      hardcap_callg = 1517250000;
     } else if (_stage == stages.MAIN_SALE_1) {
-      hardcap_call = 10710000000000000000000000;
-      hardcap_callg = 10710000000000000000000000;
+      hardcap_call = 13566000;
+      hardcap_callg = 2713200000;
     } else if (_stage == stages.MAIN_SALE_2) {
-      hardcap_call = 10710000000000000000000000;
-      hardcap_callg = 10710000000000000000000000;
+      hardcap_call = 10714500;
+      hardcap_callg = 2034900000;
     } else if (_stage == stages.MAIN_SALE_3) {
-      hardcap_call = 10710000000000000000000000;
-      hardcap_callg = 10710000000000000000000000;
+      hardcap_call = 6783000;
+      hardcap_callg = 1356600000;
     } else if (_stage == stages.MAIN_SALE_4) {
-      hardcap_call = 10710000000000000000000000;
-      hardcap_callg = 10710000000000000000000000;
-    } else {
-      // TODO: Should there by a default hardcap?
-      hardcap_call = 10710000000000000000000000;
-      hardcap_callg = 10710000000000000000000000;
+      hardcap_call = 3391500;
+      hardcap_callg = 678300000;
     }
-    return (hardcap_call, hardcap_callg);
+    // TODO: Should there by a default hardcap?
+
+    return (hardcap_call.mul(10 ** decimals), hardcap_callg.mul(10 ** decimals));
   }
   function updateStage() public {
     uint _duration = stages_duration[uint(stage)];

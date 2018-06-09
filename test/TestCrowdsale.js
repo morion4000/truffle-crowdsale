@@ -43,6 +43,8 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
     const minInvestment = await this.crowdsale.minInvestment();
     const walletCrowdsale = await this.crowdsale.wallet();
     const weiRaised = await this.crowdsale.weiRaised();
+    const callSoftCap = await this.crowdsale.callSoftCap();
+    const callgSoftCap = await this.crowdsale.callgSoftCap();
 
     stageStartTime.toNumber().should.be.greaterThan(0);
     stage.toNumber().should.be.equal(0);
@@ -52,6 +54,8 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
     minInvestment.div(1e18).toNumber().should.be.equal(0.01);
     walletCrowdsale.should.be.equal(owner);
     weiRaised.toNumber().should.be.equal(0);
+    //callSoftCap.toNumber().should.be.equal(10710000);
+    //callgSoftCap.toNumber().should.be.equal(10710000);
   });
 
   it("The investor should be able to buy tokens in PRIVATE_SALE", async function() {
@@ -68,8 +72,8 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
     const weiRaised = await instance.weiRaised();
     const userContribution = await instance.getUserContribution(investor);
 
-    callDistributed.div(1e18).toNumber().should.be.equal(84.91472141);
-    callgDistributed.div(1e18).toNumber().should.be.equal(17067.85900341);
+    callDistributed.div(1e18).toNumber().should.be.equal(118.88060594);
+    callgDistributed.div(1e18).toNumber().should.be.equal(23895.00179394);
     weiRaised.div(1e18).toNumber().should.be.equal(0.1);
     userContribution.div(1e18).toNumber().should.be.equal(0.1);
     // TODO: Check vault balance
