@@ -18,11 +18,9 @@ contract CapitalTechCrowdsale is Ownable {
   FiatContract public fiat_contract;
   RefundVault public vault;
   TeamVault public teamVault;
-  BountyVault public bountyWallet;
+  BountyVault public bountyVault;
   enum stages { PRIVATE_SALE, PRE_SALE, MAIN_SALE_1, MAIN_SALE_2, MAIN_SALE_3, MAIN_SALE_4 }
   address public wallet;
-  address public teamWallet;
-  address public bountyWallet;
   uint256 public maxContributionPerAddress;
   uint256 public stageStartTime;
   uint256 public weiRaised;
@@ -46,7 +44,7 @@ contract CapitalTechCrowdsale is Ownable {
   function () external payable {
     buyTokens(msg.sender);
   }
-  constructor(address _wallet, address _bountyWallet, address _teamWallet, address _fiatcontract, ERC20 _token_call, ERC20 _token_callg) public {
+  constructor(address _wallet, address _fiatcontract, ERC20 _token_call, ERC20 _token_callg) public {
     require(_token_call != address(0));
     require(_token_callg != address(0));
     require(_wallet != address(0));
@@ -56,8 +54,8 @@ contract CapitalTechCrowdsale is Ownable {
     wallet = _wallet;
     fiat_contract = FiatContract(_fiatcontract);
     vault = new RefundVault(_wallet);
-    bountyWallet = new BountyVault(_bountyWallet);
-    teamWallet = new TeamVault(_teamWallet);
+    bountyVault = new BountyVault(_token_call, _token_callg);
+    teamVault = new TeamVault(_token_call, _token_callg);
   }
   function powerUpContract() public onlyOwner {
     // TODO: Can this function be called twice
@@ -86,17 +84,17 @@ contract CapitalTechCrowdsale is Ownable {
     require(!distributed_team);
     uint _amount = 5250000 * 10 ** decimals;
     distributed_team = true;
-    MintableToken(token_call).mint(_teamWallet, _amount);
-    MintableToken(token_callg).mint(_teamWallet, _amount.mul(200));
-    emit TokenTransfer(msg.sender, _teamWallet, _amount, _amount, _amount.mul(200));
+    MintableToken(token_call).mint(teamVault, _amount);
+    MintableToken(token_callg).mint(teamVault, _amount.mul(200));
+    emit TokenTransfer(msg.sender, teamVault, _amount, _amount, _amount.mul(200));
   }
   function distributeBounty() public onlyOwner {
     require(!distributed_bounty);
     uint _amount = 2625000 * 10 ** decimals;
     distributed_bounty = true;
-    MintableToken(token_call).mint(_bountyWallet, _amount);
-    MintableToken(token_callg).mint(_bountyWallet, _amount.mul(200));
-    emit TokenTransfer(msg.sender, _bountyWallet, _amount, _amount, _amount.mul(200));
+    MintableToken(token_call).mint(bountyVault, _amount);
+    MintableToken(token_callg).mint(bountyVault, _amount.mul(200));
+    emit TokenTransfer(msg.sender, bountyVault, _amount, _amount, _amount.mul(200));
   }
   function getUserContribution(address _beneficiary) public view returns (uint256) {
     return contributions[_beneficiary];
