@@ -110,20 +110,20 @@ contract CapitalTechCrowdsale is Ownable {
       hardcap_call = 3123750;
       hardcap_callg = 62475000;
     } else if (stage == stages.PRE_SALE) {
-      hardcap_call = 7586250;
-      hardcap_callg = 1517250000;
+      hardcap_call = 10710000;
+      hardcap_callg = 1579725000;
     } else if (stage == stages.MAIN_SALE_1) {
-      hardcap_call = 13566000;
-      hardcap_callg = 2713200000;
+      hardcap_call = 24276000;
+      hardcap_callg = 4292925000;
     } else if (stage == stages.MAIN_SALE_2) {
-      hardcap_call = 10714500;
-      hardcap_callg = 2034900000;
+      hardcap_call = 34990500;
+      hardcap_callg = 6327825000;
     } else if (stage == stages.MAIN_SALE_3) {
-      hardcap_call = 6783000;
-      hardcap_callg = 1356600000;
+      hardcap_call = 41773500;
+      hardcap_callg = 7684425000;
     } else if (stage == stages.MAIN_SALE_4) {
-      hardcap_call = 3391500;
-      hardcap_callg = 678300000;
+      hardcap_call = 45165000;
+      hardcap_callg = 8362725000;
     }
     // TODO: Should there by a default hardcap?
 
