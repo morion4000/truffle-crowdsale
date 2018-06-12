@@ -5,6 +5,8 @@ https://www.mycapitalco.in
 pragma solidity ^0.4.18;
 import './CALLGToken.sol';
 import './CALLToken.sol';
+import './TeamVault.sol';
+import './BountyVault.sol';
 import 'openzeppelin-solidity/contracts/crowdsale/distribution/utils/RefundVault.sol';
 contract FiatContract {
   function USD(uint _id) public constant returns (uint256);
