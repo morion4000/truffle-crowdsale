@@ -13,13 +13,13 @@ module.exports = function(deployer, network, accounts) {
 	.then(() => {
 		return deployer.deploy(CALLGToken);
 	})
-	.then(() => {
+  .then(() => {
 		return deployer.deploy(CALLToken);
-	})
+  })
   .then(() => {
 		return deployer.deploy(TeamVault);
-	})
-	.then(() => {
+  })
+  .then(() => {
 		return deployer.deploy(BountyVault);
 	})
 	.then(() => {
