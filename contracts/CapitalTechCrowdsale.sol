@@ -5,6 +5,8 @@ https://www.mycapitalco.in
 pragma solidity ^0.4.18;
 import './CALLGToken.sol';
 import './CALLToken.sol';
+import './TeamVault.sol';
+import './BountyVault.sol';
 import 'openzeppelin-solidity/contracts/crowdsale/distribution/utils/RefundVault.sol';
 contract FiatContract {
   function USD(uint _id) public constant returns (uint256);
@@ -15,6 +17,8 @@ contract CapitalTechCrowdsale is Ownable {
   ERC20 public token_callg;
   FiatContract public fiat_contract;
   RefundVault public vault;
+  TeamVault public teamVault;
+  BountyVault public bountyVault;
   enum stages { PRIVATE_SALE, PRE_SALE, MAIN_SALE_1, MAIN_SALE_2, MAIN_SALE_3, MAIN_SALE_4 }
   address public wallet;
   uint256 public maxContributionPerAddress;
@@ -23,6 +27,8 @@ contract CapitalTechCrowdsale is Ownable {
   uint256 public minInvestment;
   stages public stage;
   bool public is_finalized;
+  bool public distributed_team;
+  bool public distributed_bounty;
   mapping(address => uint256) public contributions;
   mapping(uint => uint) public stages_duration;
   uint256 public callSoftCap;
@@ -48,8 +54,12 @@ contract CapitalTechCrowdsale is Ownable {
     wallet = _wallet;
     fiat_contract = FiatContract(_fiatcontract);
     vault = new RefundVault(_wallet);
+    bountyVault = new BountyVault(_token_call, _token_callg);
+    teamVault = new TeamVault(_token_call, _token_callg);
   }
-  function powerUpContract() public onlyOwner{
+  function powerUpContract() public onlyOwner {
+    // TODO: Can this function be called twice
+    // TODO: Initialize this variables in the constructor?
     require(!is_finalized);
     stageStartTime = block.timestamp;
     stage = stages.PRIVATE_SALE;
@@ -61,12 +71,30 @@ contract CapitalTechCrowdsale is Ownable {
     maxContributionPerAddress = 1500 ether;
     minInvestment = 0.01 ether;
     is_finalized = false;
+    distributed_team = false;
+    distributed_bounty = false;
     stages_duration[uint(stages.PRIVATE_SALE)] = 7 days;
     stages_duration[uint(stages.PRE_SALE)] = 7 days;
     stages_duration[uint(stages.MAIN_SALE_1)] = 7 days;
     stages_duration[uint(stages.MAIN_SALE_2)] = 7 days;
     stages_duration[uint(stages.MAIN_SALE_3)] = 7 days;
     stages_duration[uint(stages.MAIN_SALE_4)] = 7 days;
+  }
+  function distributeTeam() public onlyOwner {
+    require(!distributed_team);
+    uint _amount = 5250000 * 10 ** decimals;
+    distributed_team = true;
+    MintableToken(token_call).mint(teamVault, _amount);
+    MintableToken(token_callg).mint(teamVault, _amount.mul(200));
+    emit TokenTransfer(msg.sender, teamVault, _amount, _amount, _amount.mul(200));
+  }
+  function distributeBounty() public onlyOwner {
+    require(!distributed_bounty);
+    uint _amount = 2625000 * 10 ** decimals;
+    distributed_bounty = true;
+    MintableToken(token_call).mint(bountyVault, _amount);
+    MintableToken(token_callg).mint(bountyVault, _amount.mul(200));
+    emit TokenTransfer(msg.sender, bountyVault, _amount, _amount, _amount.mul(200));
   }
   function getUserContribution(address _beneficiary) public view returns (uint256) {
     return contributions[_beneficiary];
@@ -110,20 +138,20 @@ contract CapitalTechCrowdsale is Ownable {
       hardcap_call = 3123750;
       hardcap_callg = 62475000;
     } else if (stage == stages.PRE_SALE) {
-      hardcap_call = 7586250;
-      hardcap_callg = 1517250000;
+      hardcap_call = 10710000;
+      hardcap_callg = 1579725000;
     } else if (stage == stages.MAIN_SALE_1) {
-      hardcap_call = 13566000;
-      hardcap_callg = 2713200000;
+      hardcap_call = 24276000;
+      hardcap_callg = 4292925000;
     } else if (stage == stages.MAIN_SALE_2) {
-      hardcap_call = 10714500;
-      hardcap_callg = 2034900000;
+      hardcap_call = 34990500;
+      hardcap_callg = 6327825000;
     } else if (stage == stages.MAIN_SALE_3) {
-      hardcap_call = 6783000;
-      hardcap_callg = 1356600000;
+      hardcap_call = 41773500;
+      hardcap_callg = 7684425000;
     } else if (stage == stages.MAIN_SALE_4) {
-      hardcap_call = 3391500;
-      hardcap_callg = 678300000;
+      hardcap_call = 45165000;
+      hardcap_callg = 8362725000;
     }
     // TODO: Should there by a default hardcap?
 
