@@ -79,7 +79,10 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
     // TODO: Use the contract instance created during beforeEach
     let instance = await CapitalTechCrowdsale.deployed();
     let amount = new BigNumber(0.1).mul(1e18);
-    let purchase = await instance.buyTokens(investor, {from: investor, value: amount});
+    let purchase = await instance.buyTokens(investor, {
+      from: investor,
+      value: amount
+    });
 
     const callDistributed = await instance.callDistributed();
     const callgDistributed = await instance.callgDistributed();
@@ -96,7 +99,15 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
   it("It should increase time by 8 days", async function() {
     var duration = 8 * 60 * 60 * 24;
 
+    var before = await latestTime();
+
     increaseTime(duration);
+
+    await advanceBlock();
+
+    var after = await latestTime();
+
+    after.should.be.greaterThan(before);
   });
 
   it("The stage should advance to PRE_SALE", async function() {
@@ -130,7 +141,10 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
     // TODO: Use the contract instance created during beforeEach
     let instance = await CapitalTechCrowdsale.deployed();
     let amount = new BigNumber(0.1).mul(1e18);
-    let purchase = await instance.buyTokens(investor, {from: investor, value: amount});
+    let purchase = await instance.buyTokens(investor, {
+      from: investor,
+      value: amount
+    });
 
     const callDistributed = await instance.callDistributed();
     const callgDistributed = await instance.callgDistributed();
@@ -147,7 +161,15 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
   it("It should increase time by 8 days", async function() {
     var duration = 8 * 60 * 60 * 24;
 
+    var before = await latestTime();
+
     increaseTime(duration);
+
+    await advanceBlock();
+
+    var after = await latestTime();
+
+    after.should.be.greaterThan(before);
   });
 
   it("The stage should advance to MAIN_SALE_1", async function() {

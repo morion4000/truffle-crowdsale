@@ -1,3 +1,9 @@
+pragma solidity ^0.4.18;
+
+import 'openzeppelin-solidity/contracts/token/ERC20/ERC20.sol';
+import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
+import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
+
 contract BountyVault is Ownable {
     using SafeMath for uint256;
     ERC20 public token_call;
