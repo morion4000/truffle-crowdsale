@@ -17,10 +17,10 @@ module.exports = function(deployer, network, accounts) {
 		return deployer.deploy(CALLToken);
   })
   .then(() => {
-		return deployer.deploy(TeamVault);
+		return deployer.deploy(TeamVault, CALLToken.address, CALLGToken.address);
   })
   .then(() => {
-		return deployer.deploy(BountyVault);
+		return deployer.deploy(BountyVault, CALLToken.address, CALLGToken.address);
 	})
 	.then(() => {
 		return deployer.deploy(CapitalTechCrowdsale, wallet, FiatContract.address, CALLToken.address, CALLGToken.address);
