@@ -59,27 +59,22 @@ contract CapitalTechCrowdsale is Ownable {
     teamVault = new TeamVault(_token_call, _token_callg);
   }
   function powerUpContract() public onlyOwner {
-    // TODO: This function should be called only once, check implementation ^^
-    // TODO-Q: Initialize this variables in the constructor?
-  	// TODO-A: No, as the crowdsale won't start exactly when the contract is deployed on the main network.
-
+    // TODO: This function should be called only once
     require(!is_finalized);
     stageStartTime = block.timestamp;
     stage = stages.PRIVATE_SALE;
     weiRaised = 0;
-
   	distributeTeam();
   	distributeBounty();
-  	// TODO: Check if it's ok ^^
-	  callDistributed = 7875000 * 10 ** decimals;
+	callDistributed = 7875000 * 10 ** decimals;
     callgDistributed = 1575000000 * 10 ** decimals;
-    callSoftCap = 18585000 * 10 ** decimals; // changed to bounty+team+private+pre
-    callgSoftCap = 3717000000 * 10 ** decimals; // changed to bounty+team+private+pre
+    callSoftCap = 18585000 * 10 ** decimals;
+    callgSoftCap = 3717000000 * 10 ** decimals;
     maxContributionPerAddress = 1500 ether;
     minInvestment = 0.01 ether;
     is_finalized = false;
-    stages_duration[uint(stages.PRIVATE_SALE)] = 7 days;
-    stages_duration[uint(stages.PRE_SALE)] = 7 days;
+    stages_duration[uint(stages.PRIVATE_SALE)] = 30 days;
+    stages_duration[uint(stages.PRE_SALE)] = 30 days;
     stages_duration[uint(stages.MAIN_SALE_1)] = 7 days;
     stages_duration[uint(stages.MAIN_SALE_2)] = 7 days;
     stages_duration[uint(stages.MAIN_SALE_3)] = 7 days;
@@ -106,6 +101,15 @@ contract CapitalTechCrowdsale is Ownable {
   }
   function getUserHistory(address _beneficiary) public view returns (uint256) {
     return userHistory[_beneficiary];
+  }
+  function getReferrals(address[] _beneficiaries) public view returns (address[], uint256[]) {
+	address[] memory addrs = new address[](_beneficiaries.length);
+	uint256[] memory funds = new uint256[](_beneficiaries.length);
+	for (uint i = 0; i < _beneficiaries.length; i++) {
+		addrs[i] = _beneficiaries[i];
+		funds[i] = getUserHistory(_beneficiaries[i]);
+	}
+    return (addrs, funds);
   }
   function getAmountForCurrentStage(uint256 _amount) public view returns(uint256) {
     uint256 tokenPrice = fiat_contract.USD(0);
@@ -190,8 +194,8 @@ contract CapitalTechCrowdsale is Ownable {
     require(contributions[_beneficiary].add(weiAmount) <= maxContributionPerAddress);
     uint256 call_tokens = getAmountForCurrentStage(weiAmount);
     uint256 callg_tokens = call_tokens.mul(200);
-    //require(callDistributed.add(call_tokens) <= callHardCap);
-    //require(callgDistributed.add(callg_tokens) <= callgHardCap);
+    require(callDistributed.add(call_tokens) <= callHardCap);
+    require(callgDistributed.add(callg_tokens) <= callgHardCap);
     weiRaised = weiRaised.add(weiAmount);
     callDistributed = callDistributed.add(call_tokens);
     callgDistributed = callDistributed.add(callg_tokens);
@@ -199,38 +203,34 @@ contract CapitalTechCrowdsale is Ownable {
     MintableToken(token_callg).mint(_beneficiary, callg_tokens);
     emit TokenPurchase(msg.sender, _beneficiary, weiAmount, call_tokens, callg_tokens);
     contributions[_beneficiary] = contributions[_beneficiary].add(weiAmount);
-	  userHistory[_beneficiary] = userHistory[_beneficiary].add(call_tokens);
+	userHistory[_beneficiary] = userHistory[_beneficiary].add(call_tokens);
     vault.deposit.value(msg.value)(msg.sender);
   }
   function finalize() onlyOwner public {
     finalization();
   }
-  // TODO: Allow extensions for any stage or just current?
-  // TODO: Allow extensions or updates
-  function extendPeriodForStage(uint date, stages _stage) public onlyOwner {
-    stages_duration[uint(_stage)] = stages_duration[uint(_stage)].add(date);
+  function extendPeriod(uint date) public onlyOwner {
+    stages_duration[uint(stage)] = stages_duration[uint(stage)].add(date);
   }
-  /* TODO: refactor function */
   function transferTokens(address _to, uint256 _amount) public onlyOwner {
     updateStage();
     require(!is_finalized);
     require(_to != address(0));
     require(_amount > 0);
-	  // TODO: The owner shouldn't be able to mint tokens after sale is over or after the hardcap is reached
-    //require(callDistributed.add(_amount) <= callHardCap);
-    //require(callgDistributed.add(_amount.mul(200)) <= callgHardCap);
+    require(callDistributed.add(_amount) <= callHardCap);
+    require(callgDistributed.add(_amount.mul(200)) <= callgHardCap);
     callDistributed = callDistributed.add(_amount);
     callgDistributed = callgDistributed.add(_amount.mul(200));
     MintableToken(token_call).mint(_to, _amount);
     MintableToken(token_callg).mint(_to, _amount.mul(200));
-	  userHistory[_to] = userHistory[_to].add(_amount);
+    userHistory[_to] = userHistory[_to].add(_amount);
     emit TokenTransfer(msg.sender, _to, _amount, _amount, _amount.mul(200));
   }
   function claimRefund() public {
-	  address _beneficiary = msg.sender;
+	address _beneficiary = msg.sender;
     require(is_finalized);
     require(!goalReached());
-	  userHistory[_beneficiary] = 0;
+	userHistory[_beneficiary] = 0;
     vault.refund(_beneficiary);
   }
   function goalReached() public returns (bool) {
