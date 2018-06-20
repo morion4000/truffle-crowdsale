@@ -249,9 +249,9 @@ contract CapitalTechCrowdsale is Ownable {
   function finalization() internal {
     require(!is_finalized);
     is_finalized = true;
-    emit Finalized(callSoftCap, callgSoftCap);
+    emit Finalized(callDistributed, callgDistributed);
     if (goalReached()) {
-      emit GoalReached(callDistributed, callgDistributed);
+      emit GoalReached(callSoftCap, callgSoftCap);
       vault.close();
     } else {
       vault.enableRefunds();
