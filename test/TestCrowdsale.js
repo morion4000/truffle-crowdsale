@@ -97,25 +97,21 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
       from: investor,
       value: amount
     });
-
     const callDistributed = await this.crowdsale.callDistributed();
     const callgDistributed = await this.crowdsale.callgDistributed();
+    const amountForStage = await this.crowdsale.getAmountForCurrentStage(amount);
     const weiRaised = await this.crowdsale.weiRaised();
     const userContribution = await this.crowdsale.getUserContribution(investor);
-    const amountForStage = await this.crowdsale.getAmountForCurrentStage(amount);
-    //console.log(amountForStage);
-    const call = new BigNumber(INITIAL_CALL_DISTRIBUTED + parseInt(amountForStage)).div(1e18).toNumber();
-
-    callDistributed.div(1e18).toNumber().should.be.equal(call);
-    //callgDistributed.toNumber().should.be.equal(new BigNumber(INITIAL_CALLG_DISTRIBUTED + amountForStage * 200).toNumber());
+    callDistributed.div(1e18).toNumber().should.be.equal(INITIAL_CALL_DISTRIBUTED + amountForStage.div(1e18).toNumber());
+    callgDistributed.div(1e18).toNumber().should.be.equal(INITIAL_CALLG_DISTRIBUTED + amountForStage.div(1e18).toNumber() * 200);
     weiRaised.div(1e18).toNumber().should.be.equal(0.1);
     userContribution.div(1e18).toNumber().should.be.equal(0.1);
     // TODO: Check vault balance
     // TODO: Check user history as well
   });
 
-  it("It should increase time by 8 days", async function() {
-    var duration = 8 * 60 * 60 * 24;
+  it("It should increase time by 31 days", async function() {
+    var duration = 31 * 60 * 60 * 24;
 
     var before = await latestTime();
 
@@ -146,8 +142,8 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
   it("The hardcap should be right for PRE_SALE", async function() {
     const hardcap = await this.crowdsale.getHardCap();
 
-    hardcap[0].div(1e18).toNumber().should.be.equal(7586250);
-    hardcap[1].div(1e18).toNumber().should.be.equal(1517250000);
+    hardcap[0].div(1e18).toNumber().should.be.equal(18049500);
+    hardcap[1].div(1e18).toNumber().should.be.equal(3609900000);
   });
 
   it("The investor should be able to buy tokens in PRE_SALE", async function() {
@@ -156,21 +152,21 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
       from: investor,
       value: amount
     });
-
     const callDistributed = await this.crowdsale.callDistributed();
     const callgDistributed = await this.crowdsale.callgDistributed();
+    const amountForStage = await this.crowdsale.getAmountForCurrentStage(amount);
     const weiRaised = await this.crowdsale.weiRaised();
     const userContribution = await this.crowdsale.getUserContribution(investor);
-
-    callDistributed.div(1e18).toNumber().should.be.equal(237.76121188);
-    callgDistributed.div(1e18).toNumber().should.be.equal(24013.88239988);
+    //callDistributed.div(1e18).toNumber().should.be.equal(INITIAL_CALL_DISTRIBUTED + amountForStage.div(1e18).toNumber());
+    //callgDistributed.div(1e18).toNumber().should.be.equal(INITIAL_CALLG_DISTRIBUTED + amountForStage.div(1e18).toNumber() * 200);
     weiRaised.div(1e18).toNumber().should.be.equal(0.2);
     userContribution.div(1e18).toNumber().should.be.equal(0.2);
     // TODO: Check vault balance
+    // TODO: Check user history as well
   });
 
-  it("It should increase time by 8 days", async function() {
-    var duration = 8 * 60 * 60 * 24;
+  it("It should increase time by 31 days", async function() {
+    var duration = 31 * 60 * 60 * 24;
 
     var before = await latestTime();
 
@@ -185,6 +181,15 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
 
   it("The stage should advance to MAIN_SALE_1", async function() {
     let call = await this.crowdsale.updateStage();
+    let stageStartTime = await this.crowdsale.stageStartTime();
+    let duration0 = await this.crowdsale.stages_duration(0);
+    let duration1 = await this.crowdsale.stages_duration(1);
+    let duration2 = await this.crowdsale.stages_duration(2);
+    var before = await latestTime();
+
+    console.log('start', stageStartTime);
+    console.log('before', before);
+    console.log('duration', duration0, duration1, duration2);
 
     const stage = await this.crowdsale.stage();
 

@@ -27,6 +27,7 @@ contract CapitalTechCrowdsale is Ownable {
   uint256 public minInvestment;
   stages public stage;
   bool public is_finalized;
+  bool public powered_up;
   bool public distributed_team;
   bool public distributed_bounty;
   mapping(address => uint256) public contributions;
@@ -59,7 +60,7 @@ contract CapitalTechCrowdsale is Ownable {
     teamVault = new TeamVault(_token_call, _token_callg);
   }
   function powerUpContract() public onlyOwner {
-    require(uint(stage) == 0);
+    require(!powered_up);
     require(!is_finalized);
     stageStartTime = block.timestamp;
     stage = stages.PRIVATE_SALE;
@@ -73,6 +74,7 @@ contract CapitalTechCrowdsale is Ownable {
     maxContributionPerAddress = 1500 ether;
     minInvestment = 0.01 ether;
     is_finalized = false;
+    powered_up = true;
     stages_duration[uint(stages.PRIVATE_SALE)] = 30 days;
     stages_duration[uint(stages.PRE_SALE)] = 30 days;
     stages_duration[uint(stages.MAIN_SALE_1)] = 7 days;
@@ -199,7 +201,7 @@ contract CapitalTechCrowdsale is Ownable {
     require(callgDistributed.add(callg_tokens) <= _hardcapCallg);
     weiRaised = weiRaised.add(weiAmount);
     callDistributed = callDistributed.add(call_tokens);
-    callgDistributed = callDistributed.add(callg_tokens);
+    callgDistributed = callgDistributed.add(callg_tokens);
     MintableToken(token_call).mint(_beneficiary, call_tokens);
     MintableToken(token_callg).mint(_beneficiary, callg_tokens);
     emit TokenPurchase(msg.sender, _beneficiary, weiAmount, call_tokens, callg_tokens);
