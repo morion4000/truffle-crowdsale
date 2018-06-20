@@ -147,23 +147,23 @@ contract CapitalTechCrowdsale is Ownable {
     uint hardcap_call;
     uint hardcap_callg;
     if (stage == stages.PRIVATE_SALE) {
-      hardcap_call = 3123750;
-      hardcap_callg = 62475000;
+      hardcap_call = 10842563;
+      hardcap_callg = 2168512500;
     } else if (stage == stages.PRE_SALE) {
-      hardcap_call = 10710000;
-      hardcap_callg = 2142000000;
+      hardcap_call = 18049500;
+      hardcap_callg = 3609900000;
     } else if (stage == stages.MAIN_SALE_1) {
-      hardcap_call = 24276000;
-      hardcap_callg = 4855200000;
+      hardcap_call = 30937200;
+      hardcap_callg = 6187440000;
     } else if (stage == stages.MAIN_SALE_2) {
-      hardcap_call = 34450500;
-      hardcap_callg = 6890100000;
+      hardcap_call = 40602975;
+      hardcap_callg = 8120595000;
     } else if (stage == stages.MAIN_SALE_3) {
-      hardcap_call = 41233500;
-      hardcap_callg = 8246700000;
+      hardcap_call = 47046825;
+      hardcap_callg = 9409365000;
     } else {
-      hardcap_call = 44625000;
-      hardcap_callg = 8925000000;
+      hardcap_call = 52500000;
+      hardcap_callg = 10500000000;
     }
     return (hardcap_call.mul(10 ** decimals), hardcap_callg.mul(10 ** decimals));
   }
