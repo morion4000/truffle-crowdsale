@@ -19,7 +19,7 @@ contract CapitalTechCrowdsale is Ownable {
   RefundVault public vault;
   TeamVault public teamVault;
   BountyVault public bountyVault;
-  enum stages { PRIVATE_SALE, PRE_SALE, MAIN_SALE_1, MAIN_SALE_2, MAIN_SALE_3, MAIN_SALE_4 }
+  enum stages { PRIVATE_SALE, PRE_SALE, MAIN_SALE_1, MAIN_SALE_2, MAIN_SALE_3, MAIN_SALE_4, FINALIZED }
   address public wallet;
   uint256 public maxContributionPerAddress;
   uint256 public stageStartTime;
@@ -41,8 +41,8 @@ contract CapitalTechCrowdsale is Ownable {
   event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount_call, uint256 amount_callg);
   event TokenTransfer(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount_call, uint256 amount_callg);
   event StageChanged(stages stage, stages next_stage, uint stageStartTime);
-  event GoalReached(uint callDistributed, uint callgDistributed);
-  event Finalized();
+  event GoalReached(uint callSoftCap, uint callgSoftCap);
+  event Finalized(uint callDistributed, uint callgDistributed);
   function () external payable {
     buyTokens(msg.sender);
   }
@@ -140,8 +140,10 @@ contract CapitalTechCrowdsale is Ownable {
       next_stage = stages.MAIN_SALE_2;
     } else if (stage == stages.MAIN_SALE_2) {
       next_stage = stages.MAIN_SALE_3;
-    } else {
+    } else if (stage == stages.MAIN_SALE_3) {
       next_stage = stages.MAIN_SALE_4;
+    } else {
+      next_stage = stages.FINALIZED;
     }
     return next_stage;
   }
@@ -174,9 +176,9 @@ contract CapitalTechCrowdsale is Ownable {
     (uint _hardcapCall, uint _hardcapCallg) = getHardCap();
     if(stageStartTime.add(_duration) <= block.timestamp || callDistributed >= _hardcapCall || callgDistributed >= _hardcapCallg) {
       stages next_stage = _getNextStage();
-      if (next_stage != stages.MAIN_SALE_4) {
+      stage = next_stage;
+      if (next_stage != stages.FINALIZED) {
         emit StageChanged(stage, next_stage, stageStartTime);
-        stage = next_stage;
         stageStartTime = block.timestamp;
       } else {
         finalization();
@@ -238,15 +240,18 @@ contract CapitalTechCrowdsale is Ownable {
     vault.refund(_beneficiary);
   }
   function goalReached() public returns (bool) {
-    require(callDistributed >= callSoftCap);
-    require(callgDistributed >= callgSoftCap);
-    emit GoalReached(callDistributed, callgDistributed);
+    if (callDistributed >= callSoftCap && callgDistributed >= callgSoftCap) {
+      return true;
+    } else {
+      return false;
+    }
   }
   function finalization() internal {
     require(!is_finalized);
     is_finalized = true;
-    emit Finalized();
+    emit Finalized(callSoftCap, callgSoftCap);
     if (goalReached()) {
+      emit GoalReached(callDistributed, callgDistributed);
       vault.close();
     } else {
       vault.enableRefunds();

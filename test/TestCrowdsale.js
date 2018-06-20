@@ -31,6 +31,7 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
   });
 
   beforeEach(async function() {
+    await advanceBlock();
     /*
     this.crowdsale = await CapitalTechCrowdsale.new(owner, FiatContract.address, CALLToken.address, CALLGToken.address);
 
@@ -111,17 +112,9 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
   });
 
   it("It should increase time by 30 days", async function() {
-    var duration = 30 * 60 * 60 * 24;
-
-    var before = await latestTime();
+    const duration = 30 * 3600 * 24;
 
     increaseTime(duration);
-
-    await advanceBlock();
-
-    var after = await latestTime();
-
-    after.should.be.greaterThan(before);
   });
 
   it("The stage should advance to PRE_SALE", async function() {
@@ -166,17 +159,9 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
   });
 
   it("It should increase time by 30 days", async function() {
-    var duration = 30 * 60 * 60 * 24;
-
-    var before = await latestTime();
+    const duration = 30 * 3600* 24;
 
     increaseTime(duration);
-
-    await advanceBlock();
-
-    var after = await latestTime();
-
-    after.should.be.greaterThan(before);
   });
 
   it("The stage should advance to MAIN_SALE_1", async function() {
@@ -185,5 +170,61 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
     const stage = await this.crowdsale.stage();
 
     stage.toNumber().should.be.equal(2);
+  });
+
+  it("It should increase time by 7 days", async function() {
+    const duration = 7 * 3600 * 24;
+
+    increaseTime(duration);
+  });
+
+  it("The stage should advance to MAIN_SALE_2", async function() {
+    await this.crowdsale.updateStage();
+
+    const stage = await this.crowdsale.stage();
+
+    stage.toNumber().should.be.equal(3);
+  });
+
+  it("It should increase time by 7 days", async function() {
+    const duration = 7 * 3600 * 24;
+
+    increaseTime(duration);
+  });
+
+  it("The stage should advance to MAIN_SALE_3", async function() {
+    await this.crowdsale.updateStage();
+
+    const stage = await this.crowdsale.stage();
+
+    stage.toNumber().should.be.equal(4);
+  });
+
+  it("It should increase time by 7 days", async function() {
+    const duration = 7 * 3600 * 24;
+
+    increaseTime(duration);
+  });
+
+  it("The stage should advance to MAIN_SALE_4", async function() {
+    await this.crowdsale.updateStage();
+
+    const stage = await this.crowdsale.stage();
+
+    stage.toNumber().should.be.equal(5);
+  });
+
+  it("It should increase time by 7 days", async function() {
+    const duration = 7 * 3600 * 24;
+
+    increaseTime(duration);
+  });
+
+  it("The sale should be finalized", async function() {
+    await this.crowdsale.updateStage();
+
+    const stage = await this.crowdsale.stage();
+
+    stage.toNumber().should.be.equal(6);
   });
 });
