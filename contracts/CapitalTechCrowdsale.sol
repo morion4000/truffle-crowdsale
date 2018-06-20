@@ -59,17 +59,17 @@ contract CapitalTechCrowdsale is Ownable {
     teamVault = new TeamVault(_token_call, _token_callg);
   }
   function powerUpContract() public onlyOwner {
-    // TODO: This function should be called only once
+    require(uint(stage) == 0);
     require(!is_finalized);
     stageStartTime = block.timestamp;
     stage = stages.PRIVATE_SALE;
     weiRaised = 0;
   	distributeTeam();
   	distributeBounty();
-	callDistributed = 7875000 * 10 ** decimals;
+	  callDistributed = 7875000 * 10 ** decimals;
     callgDistributed = 1575000000 * 10 ** decimals;
-    callSoftCap = 18585000 * 10 ** decimals;
-    callgSoftCap = 3717000000 * 10 ** decimals;
+    callSoftCap = 18049500 * 10 ** decimals;
+    callgSoftCap = 3609900000 * 10 ** decimals;
     maxContributionPerAddress = 1500 ether;
     minInvestment = 0.01 ether;
     is_finalized = false;

@@ -5,24 +5,25 @@ const TeamVault = artifacts.require("./TeamVault.sol");
 const BountyVault = artifacts.require("./BountyVault.sol");
 const CapitalTechCrowdsale = artifacts.require("./CapitalTechCrowdsale.sol");
 module.exports = function(deployer, network, accounts) {
-        const wallet = accounts[0];
-	return deployer
-	.then(() => {
-		return deployer.deploy(FiatContract);
-	})
-	.then(() => {
-		return deployer.deploy(CALLGToken);
-	})
-  .then(() => {
-		return deployer.deploy(CALLToken);
-  })
-  .then(() => {
-		return deployer.deploy(TeamVault, CALLToken.address, CALLGToken.address);
-  })
-  .then(() => {
-		return deployer.deploy(BountyVault, CALLToken.address, CALLGToken.address);
-	})
-	.then(() => {
-		return deployer.deploy(CapitalTechCrowdsale, wallet, FiatContract.address, CALLToken.address, CALLGToken.address);
-	});
+  const wallet = accounts[0];
+  return deployer
+    .then(() => {
+      return deployer.deploy(FiatContract);
+    })
+    .then(() => {
+      return deployer.deploy(CALLGToken);
+    })
+    .then(() => {
+      return deployer.deploy(CALLToken);
+    })
+    .then(() => {
+      return deployer.deploy(TeamVault, CALLToken.address, CALLGToken.address);
+    })
+    .then(() => {
+      return deployer.deploy(BountyVault, CALLToken.address, CALLGToken.address);
+    })
+    .then(() => {
+      return deployer.deploy(CapitalTechCrowdsale, wallet, FiatContract.address, CALLToken.address, CALLGToken.address);
+    })
+    .catch(console.error);
 };
