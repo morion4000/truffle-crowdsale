@@ -6,4 +6,4 @@ before_script:
   - truffle version
   - npm update
 script:
-  - npm run migrate:kovan
+  - npm run migrate:ropsten
