@@ -187,6 +187,7 @@ contract CapitalTechCrowdsale is Ownable {
     if (_beneficiary == address(0)) {
       _beneficiary = msg.sender;
     }
+    (uint _hardcapCall, uint _hardcapCallg) = getHardCap();
     uint256 weiAmount = msg.value;
     require(weiAmount > 0);
     require(_beneficiary != address(0));
@@ -194,8 +195,8 @@ contract CapitalTechCrowdsale is Ownable {
     require(contributions[_beneficiary].add(weiAmount) <= maxContributionPerAddress);
     uint256 call_tokens = getAmountForCurrentStage(weiAmount);
     uint256 callg_tokens = call_tokens.mul(200);
-    require(callDistributed.add(call_tokens) <= callHardCap);
-    require(callgDistributed.add(callg_tokens) <= callgHardCap);
+    require(callDistributed.add(call_tokens) <= _hardcapCall);
+    require(callgDistributed.add(callg_tokens) <= _hardcapCallg);
     weiRaised = weiRaised.add(weiAmount);
     callDistributed = callDistributed.add(call_tokens);
     callgDistributed = callDistributed.add(callg_tokens);
@@ -217,8 +218,9 @@ contract CapitalTechCrowdsale is Ownable {
     require(!is_finalized);
     require(_to != address(0));
     require(_amount > 0);
-    require(callDistributed.add(_amount) <= callHardCap);
-    require(callgDistributed.add(_amount.mul(200)) <= callgHardCap);
+    (uint _hardcapCall, uint _hardcapCallg) = getHardCap();
+    require(callDistributed.add(_amount) <= _hardcapCall);
+    require(callgDistributed.add(_amount.mul(200)) <= _hardcapCallg);
     callDistributed = callDistributed.add(_amount);
     callgDistributed = callgDistributed.add(_amount.mul(200));
     MintableToken(token_call).mint(_to, _amount);
