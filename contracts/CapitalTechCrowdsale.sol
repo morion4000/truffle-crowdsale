@@ -105,12 +105,12 @@ contract CapitalTechCrowdsale is Ownable {
     return userHistory[_beneficiary];
   }
   function getReferrals(address[] _beneficiaries) public view returns (address[], uint256[]) {
-	address[] memory addrs = new address[](_beneficiaries.length);
-	uint256[] memory funds = new uint256[](_beneficiaries.length);
-	for (uint i = 0; i < _beneficiaries.length; i++) {
-		addrs[i] = _beneficiaries[i];
-		funds[i] = getUserHistory(_beneficiaries[i]);
-	}
+  	address[] memory addrs = new address[](_beneficiaries.length);
+  	uint256[] memory funds = new uint256[](_beneficiaries.length);
+  	for (uint i = 0; i < _beneficiaries.length; i++) {
+  		addrs[i] = _beneficiaries[i];
+  		funds[i] = getUserHistory(_beneficiaries[i]);
+  	}
     return (addrs, funds);
   }
   function getAmountForCurrentStage(uint256 _amount) public view returns(uint256) {
@@ -172,7 +172,7 @@ contract CapitalTechCrowdsale is Ownable {
   function updateStage() public {
     uint _duration = stages_duration[uint(stage)];
     (uint _hardcapCall, uint _hardcapCallg) = getHardCap();
-    if(stageStartTime.add(_duration) >= block.timestamp || callDistributed >= _hardcapCall || callgDistributed >= _hardcapCallg) {
+    if(stageStartTime.add(_duration) <= block.timestamp || callDistributed >= _hardcapCall || callgDistributed >= _hardcapCallg) {
       stages next_stage = _getNextStage();
       if (next_stage != stages.MAIN_SALE_4) {
         emit StageChanged(stage, next_stage, stageStartTime);
@@ -206,7 +206,7 @@ contract CapitalTechCrowdsale is Ownable {
     MintableToken(token_callg).mint(_beneficiary, callg_tokens);
     emit TokenPurchase(msg.sender, _beneficiary, weiAmount, call_tokens, callg_tokens);
     contributions[_beneficiary] = contributions[_beneficiary].add(weiAmount);
-	userHistory[_beneficiary] = userHistory[_beneficiary].add(call_tokens);
+    userHistory[_beneficiary] = userHistory[_beneficiary].add(call_tokens);
     vault.deposit.value(msg.value)(msg.sender);
   }
   function finalize() onlyOwner public {
@@ -231,10 +231,10 @@ contract CapitalTechCrowdsale is Ownable {
     emit TokenTransfer(msg.sender, _to, _amount, _amount, _amount.mul(200));
   }
   function claimRefund() public {
-	address _beneficiary = msg.sender;
+	  address _beneficiary = msg.sender;
     require(is_finalized);
     require(!goalReached());
-	userHistory[_beneficiary] = 0;
+    userHistory[_beneficiary] = 0;
     vault.refund(_beneficiary);
   }
   function goalReached() public returns (bool) {

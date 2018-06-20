@@ -110,8 +110,8 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
     // TODO: Check user history as well
   });
 
-  it("It should increase time by 31 days", async function() {
-    var duration = 31 * 60 * 60 * 24;
+  it("It should increase time by 30 days", async function() {
+    var duration = 30 * 60 * 60 * 24;
 
     var before = await latestTime();
 
@@ -125,7 +125,7 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
   });
 
   it("The stage should advance to PRE_SALE", async function() {
-    let call = await this.crowdsale.updateStage()
+    await this.crowdsale.updateStage()
 
     const stage = await this.crowdsale.stage();
 
@@ -165,8 +165,8 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
     // TODO: Check user history as well
   });
 
-  it("It should increase time by 31 days", async function() {
-    var duration = 31 * 60 * 60 * 24;
+  it("It should increase time by 30 days", async function() {
+    var duration = 30 * 60 * 60 * 24;
 
     var before = await latestTime();
 
@@ -180,16 +180,7 @@ contract("CapitalTechCrowdsale", function([owner, wallet, investor, otherInvesto
   });
 
   it("The stage should advance to MAIN_SALE_1", async function() {
-    let call = await this.crowdsale.updateStage();
-    let stageStartTime = await this.crowdsale.stageStartTime();
-    let duration0 = await this.crowdsale.stages_duration(0);
-    let duration1 = await this.crowdsale.stages_duration(1);
-    let duration2 = await this.crowdsale.stages_duration(2);
-    var before = await latestTime();
-
-    console.log('start', stageStartTime);
-    console.log('before', before);
-    console.log('duration', duration0, duration1, duration2);
+    await this.crowdsale.updateStage();
 
     const stage = await this.crowdsale.stage();
 
