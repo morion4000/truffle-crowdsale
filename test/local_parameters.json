@@ -1,10 +1,69 @@
 {
-  "STAGES_TIME": {
-    "PRIVATE_SALE": 30,
-    "PRE_SALE": 30,
-    "MAIN_SALE_1": 7,
-    "MAIN_SALE_2": 7,
-    "MAIN_SALE_3": 7,
-    "MAIN_SALE_4": 7
+  "SOFT_CAP": {
+    "CALL": 18049500,
+    "CALLG": 3609900000
+  },
+  "INITIAL_DISTRIBUTION": {
+    "CALL": 7875000,
+    "CALLG": 1575000000
+  },
+  "STAGES": {
+    "PRIVATE_SALE": {
+      "ID": 0,
+      "DURATION": 30,
+      "CALL_PER_ETHER": 1698.29457259,
+      "HARDCAP": {
+        "CALL": 10842563,
+        "CALLG": 2168512500
+      }
+    },
+    "PRE_SALE": {
+      "ID": 1,
+      "DURATION": 30,
+      "CALL_PER_ETHER": 1188.80605948,
+      "HARDCAP": {
+        "CALL": 18049500,
+        "CALLG": 3609900000
+      }
+    },
+    "MAIN_SALE_1": {
+      "ID": 2,
+      "DURATION": 7,
+      "CALL_PER_ETHER": 849.14721418,
+      "HARDCAP": {
+        "CALL": 30937200,
+        "CALLG": 6187440000
+      }
+    },
+    "MAIN_SALE_2": {
+      "ID": 3,
+      "DURATION": 7,
+      "CALL_PER_ETHER": 743.00376509,
+      "HARDCAP": {
+        "CALL": 40602975,
+        "CALLG": 8120595000
+      }
+    },
+    "MAIN_SALE_3": {
+      "ID": 4,
+      "DURATION": 7,
+      "CALL_PER_ETHER": 660.4478021,
+      "HARDCAP": {
+        "CALL": 47046825,
+        "CALLG": 9409365000
+      }
+    },
+    "MAIN_SALE_4": {
+      "ID": 5,
+      "DURATION": 7,
+      "CALL_PER_ETHER": 594.40302974,
+      "HARDCAP": {
+        "CALL": 52500000,
+        "CALLG": 10500000000
+      }
+    },
+    "FINALIZED": {
+      "ID": 6
+    }
   }
 }
