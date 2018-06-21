@@ -62,8 +62,8 @@ contract("CapitalTechCrowdsalePowerUp", function([owner, wallet, investor, other
     stage.toNumber().should.be.equal(0);
     callDistributed.div(1e18).toNumber().should.be.equal(parameters.INITIAL_DISTRIBUTION.CALL);
     callgDistributed.div(1e18).toNumber().should.be.equal(parameters.INITIAL_DISTRIBUTION.CALLG);
-    maxContributionPerAddress.div(1e18).toNumber().should.be.equal(1500);
-    minInvestment.div(1e18).toNumber().should.be.equal(0.01);
+    maxContributionPerAddress.div(1e18).toNumber().should.be.equal(parameters.CONTRIBUTION_PER_ADDRESS.MAX);
+    minInvestment.div(1e18).toNumber().should.be.equal(parameters.CONTRIBUTION_PER_ADDRESS.MIN);
     walletCrowdsale.should.be.equal(owner);
     weiRaised.toNumber().should.be.equal(0);
     callSoftCap.div(1e18).toNumber().should.be.equal(parameters.SOFT_CAP.CALL);

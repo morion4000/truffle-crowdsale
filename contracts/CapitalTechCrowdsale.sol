@@ -72,7 +72,8 @@ contract CapitalTechCrowdsale is Ownable {
     callgDistributed = 1575000000 * 10 ** decimals;
     callSoftCap = 18049500 * 10 ** decimals;
     callgSoftCap = 3609900000 * 10 ** decimals;
-    maxContributionPerAddress = 1500 ether;
+    //maxContributionPerAddress = 1500 ether;
+    maxContributionPerAddress = 150000 ether;
     minInvestment = 0.01 ether;
     is_finalized = false;
     powered_up = true;
@@ -200,8 +201,8 @@ contract CapitalTechCrowdsale is Ownable {
     require(contributions[_beneficiary].add(weiAmount) <= maxContributionPerAddress);
     uint256 call_tokens = getAmountForCurrentStage(weiAmount);
     uint256 callg_tokens = call_tokens.mul(200);
-    require(callDistributed.add(call_tokens) <= _hardcapCall);
-    require(callgDistributed.add(callg_tokens) <= _hardcapCallg);
+    //require(callDistributed.add(call_tokens) <= _hardcapCall);
+    //require(callgDistributed.add(callg_tokens) <= _hardcapCallg);
     weiRaised = weiRaised.add(weiAmount);
     callDistributed = callDistributed.add(call_tokens);
     callgDistributed = callgDistributed.add(callg_tokens);

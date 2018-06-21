@@ -7,6 +7,10 @@
     "CALL": 7875000,
     "CALLG": 1575000000
   },
+  "CONTRIBUTION_PER_ADDRESS": {
+    "MIN": 0.01,
+    "MAX": 150000
+  },
   "STAGES": {
     "PRIVATE_SALE": {
       "ID": 0,
