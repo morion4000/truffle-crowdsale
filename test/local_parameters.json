@@ -1,0 +1,10 @@
+{
+  "STAGES_TIME": {
+    "PRIVATE_SALE": 30,
+    "PRE_SALE": 30,
+    "MAIN_SALE_1": 7,
+    "MAIN_SALE_2": 7,
+    "MAIN_SALE_3": 7,
+    "MAIN_SALE_4": 7
+  }
+}
