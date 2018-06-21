@@ -2,7 +2,8 @@
 Capital Technologies & Research - Capital (CALL) & CapitalGAS (CALLG) - Crowdsale Smart Contract
 https://www.mycapitalco.in
 */
-pragma solidity ^0.4.18;
+pragma solidity 0.4.24;
+
 import './CALLGToken.sol';
 import './CALLToken.sol';
 import './TeamVault.sol';
