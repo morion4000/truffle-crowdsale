@@ -29,7 +29,7 @@ contract("TestCrowdsaleStagesByTime", function([owner, wallet, investor, otherIn
   });
 
   beforeEach(async function() {
-    await this.crowdsale.updateStage()
+    await this.crowdsale.updateStage();
 
     await advanceBlock();
   });

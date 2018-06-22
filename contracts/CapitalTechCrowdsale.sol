@@ -201,8 +201,6 @@ contract CapitalTechCrowdsale is Ownable {
     require(contributions[_beneficiary].add(weiAmount) <= maxContributionPerAddress);
     uint256 call_tokens = getAmountForCurrentStage(weiAmount);
     uint256 callg_tokens = call_tokens.mul(200);
-    //require(callDistributed.add(call_tokens) <= _hardcapCall);
-    //require(callgDistributed.add(callg_tokens) <= _hardcapCallg);
     weiRaised = weiRaised.add(weiAmount);
     callDistributed = callDistributed.add(call_tokens);
     callgDistributed = callgDistributed.add(callg_tokens);
@@ -225,8 +223,6 @@ contract CapitalTechCrowdsale is Ownable {
     require(_to != address(0));
     require(_amount > 0);
     (uint _hardcapCall, uint _hardcapCallg) = getHardCap();
-    require(callDistributed.add(_amount) <= _hardcapCall);
-    require(callgDistributed.add(_amount.mul(200)) <= _hardcapCallg);
     callDistributed = callDistributed.add(_amount);
     callgDistributed = callgDistributed.add(_amount.mul(200));
     MintableToken(token_call).mint(_to, _amount);
@@ -241,7 +237,7 @@ contract CapitalTechCrowdsale is Ownable {
     userHistory[_beneficiary] = 0;
     vault.refund(_beneficiary);
   }
-  function goalReached() public returns (bool) {
+  function goalReached() public view returns (bool) {
     if (callDistributed >= callSoftCap && callgDistributed >= callgSoftCap) {
       return true;
     } else {

@@ -5,7 +5,7 @@ const TeamVault = artifacts.require("./TeamVault.sol");
 const BountyVault = artifacts.require("./BountyVault.sol");
 const CapitalTechCrowdsale = artifacts.require("./CapitalTechCrowdsale.sol");
 module.exports = function(deployer, network, accounts) {
-  const wallet = accounts[0];
+  const wallet = accounts[1];
   return deployer
     .then(() => {
       return deployer.deploy(FiatContract);
