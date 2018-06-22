@@ -1,4 +1,5 @@
-pragma solidity ^0.4.15;
+pragma solidity 0.4.24;
+
 contract FiatContract {
 
     mapping(uint => Token) public tokens;

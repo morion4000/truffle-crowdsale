@@ -15,6 +15,7 @@ const FiatContract = artifacts.require("./FiatContract.sol")
 const CALLGToken = artifacts.require("./CALLGToken.sol");
 const CALLToken = artifacts.require("./CALLToken.sol");
 const CapitalTechCrowdsale = artifacts.require("./CapitalTechCrowdsale.sol");
+const parameters = require('./local_parameters.json');
 
 contract("TestCrowdsaleStagesByTime", function([owner, wallet, investor, otherInvestor]) {
   before(async function() {
@@ -28,90 +29,62 @@ contract("TestCrowdsaleStagesByTime", function([owner, wallet, investor, otherIn
   });
 
   beforeEach(async function() {
+    await this.crowdsale.updateStage();
+
     await advanceBlock();
   });
 
-  it("It should increase time by 30 days", async function() {
-    const duration = 30 * 3600 * 24;
-
-    increaseTime(duration);
-  });
-
-  it("The stage should advance to PRE_SALE", async function() {
-    await this.crowdsale.updateStage()
-
+  it("The stage should be PRIVATE_SALE", async function() {
     const stage = await this.crowdsale.stage();
 
-    stage.toNumber().should.be.equal(1);
+    stage.toNumber().should.be.equal(parameters.STAGES.PRIVATE_SALE.ID);
+
+    increaseTime(parameters.STAGES.PRIVATE_SALE.DURATION * 3600 * 24);
   });
 
-  it("It should increase time by 30 days", async function() {
-    const duration = 30 * 3600* 24;
-
-    increaseTime(duration);
-  });
-
-  it("The stage should advance to MAIN_SALE_1", async function() {
-    await this.crowdsale.updateStage();
-
+  it("The stage should be PRE_SALE", async function() {
     const stage = await this.crowdsale.stage();
 
-    stage.toNumber().should.be.equal(2);
+    stage.toNumber().should.be.equal(parameters.STAGES.PRE_SALE.ID);
+
+    increaseTime(parameters.STAGES.PRE_SALE.DURATION * 3600 * 24);
   });
 
-  it("It should increase time by 7 days", async function() {
-    const duration = 7 * 3600 * 24;
-
-    increaseTime(duration);
-  });
-
-  it("The stage should advance to MAIN_SALE_2", async function() {
-    await this.crowdsale.updateStage();
-
+  it("The stage should be MAIN_SALE_1", async function() {
     const stage = await this.crowdsale.stage();
 
-    stage.toNumber().should.be.equal(3);
+    stage.toNumber().should.be.equal(parameters.STAGES.MAIN_SALE_1.ID);
+
+    increaseTime(parameters.STAGES.MAIN_SALE_1.DURATION * 3600 * 24);
   });
 
-  it("It should increase time by 7 days", async function() {
-    const duration = 7 * 3600 * 24;
-
-    increaseTime(duration);
-  });
-
-  it("The stage should advance to MAIN_SALE_3", async function() {
-    await this.crowdsale.updateStage();
-
+  it("The stage should be MAIN_SALE_2", async function() {
     const stage = await this.crowdsale.stage();
 
-    stage.toNumber().should.be.equal(4);
+    stage.toNumber().should.be.equal(parameters.STAGES.MAIN_SALE_2.ID);
+
+    increaseTime(parameters.STAGES.MAIN_SALE_2.DURATION * 3600 * 24);
   });
 
-  it("It should increase time by 7 days", async function() {
-    const duration = 7 * 3600 * 24;
-
-    increaseTime(duration);
-  });
-
-  it("The stage should advance to MAIN_SALE_4", async function() {
-    await this.crowdsale.updateStage();
-
+  it("The stage should be MAIN_SALE_3", async function() {
     const stage = await this.crowdsale.stage();
 
-    stage.toNumber().should.be.equal(5);
+    stage.toNumber().should.be.equal(parameters.STAGES.MAIN_SALE_3.ID);
+
+    increaseTime(parameters.STAGES.MAIN_SALE_3.DURATION * 3600 * 24);
   });
 
-  it("It should increase time by 7 days", async function() {
-    const duration = 7 * 3600 * 24;
-
-    increaseTime(duration);
-  });
-
-  it("The sale should be finalized", async function() {
-    await this.crowdsale.updateStage();
-
+  it("The stage should be MAIN_SALE_4", async function() {
     const stage = await this.crowdsale.stage();
 
-    stage.toNumber().should.be.equal(6);
+    stage.toNumber().should.be.equal(parameters.STAGES.MAIN_SALE_4.ID);
+
+    increaseTime(parameters.STAGES.MAIN_SALE_4.DURATION * 3600 * 24);
+  });
+
+  it("The stage should be FINALIZED", async function() {
+    const stage = await this.crowdsale.stage();
+
+    stage.toNumber().should.be.equal(parameters.STAGES.FINALIZED.ID);
   });
 });

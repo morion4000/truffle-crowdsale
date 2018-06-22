@@ -15,7 +15,7 @@ const FiatContract = artifacts.require("./FiatContract.sol")
 const CALLGToken = artifacts.require("./CALLGToken.sol");
 const CALLToken = artifacts.require("./CALLToken.sol");
 const CapitalTechCrowdsale = artifacts.require("./CapitalTechCrowdsale.sol");
-const parameters = require('local_parameters.json');
+const parameters = require('./local_parameters.json');
 
 contract("TestCrowdsaleHardcaps", function([owner, wallet, investor, otherInvestor]) {
   before(async function() {
@@ -29,24 +29,62 @@ contract("TestCrowdsaleHardcaps", function([owner, wallet, investor, otherInvest
   });
 
   beforeEach(async function() {
+    await this.crowdsale.updateStage();
+
     await advanceBlock();
   });
 
   it("The hardcap should be right for PRIVATE_SALE", async function() {
     const hardcap = await this.crowdsale.getHardCap();
 
-    hardcap[0].div(1e18).toNumber().should.be.equal(10842563);
-    hardcap[1].div(1e18).toNumber().should.be.equal(2168512500);
+    hardcap[0].div(1e18).toNumber().should.be.equal(parameters.STAGES.PRIVATE_SALE.HARDCAP.CALL);
+    hardcap[1].div(1e18).toNumber().should.be.equal(parameters.STAGES.PRIVATE_SALE.HARDCAP.CALLG);
+
+    increaseTime(parameters.STAGES.PRIVATE_SALE.DURATION * 3600 * 24);
   });
 
   it("The hardcap should be right for PRE_SALE", async function() {
-    increaseTime(parameters.STAGES_TIME.PRIVATE_SALE * 3600 * 24);
-
-    await this.crowdsale.updateStage();
-
     const hardcap = await this.crowdsale.getHardCap();
 
-    hardcap[0].div(1e18).toNumber().should.be.equal(18049500);
-    hardcap[1].div(1e18).toNumber().should.be.equal(3609900000);
+    hardcap[0].div(1e18).toNumber().should.be.equal(parameters.STAGES.PRE_SALE.HARDCAP.CALL);
+    hardcap[1].div(1e18).toNumber().should.be.equal(parameters.STAGES.PRE_SALE.HARDCAP.CALLG);
+
+    increaseTime(parameters.STAGES.PRE_SALE.DURATION * 3600 * 24);
+  });
+
+  it("The hardcap should be right for MAIN_SALE_1", async function() {
+    const hardcap = await this.crowdsale.getHardCap();
+
+    hardcap[0].div(1e18).toNumber().should.be.equal(parameters.STAGES.MAIN_SALE_1.HARDCAP.CALL);
+    hardcap[1].div(1e18).toNumber().should.be.equal(parameters.STAGES.MAIN_SALE_1.HARDCAP.CALLG);
+
+    increaseTime(parameters.STAGES.MAIN_SALE_1.DURATION * 3600 * 24);
+  });
+
+  it("The hardcap should be right for MAIN_SALE_2", async function() {
+    const hardcap = await this.crowdsale.getHardCap();
+
+    hardcap[0].div(1e18).toNumber().should.be.equal(parameters.STAGES.MAIN_SALE_2.HARDCAP.CALL);
+    hardcap[1].div(1e18).toNumber().should.be.equal(parameters.STAGES.MAIN_SALE_2.HARDCAP.CALLG);
+
+    increaseTime(parameters.STAGES.MAIN_SALE_2.DURATION * 3600 * 24);
+  });
+
+  it("The hardcap should be right for MAIN_SALE_3", async function() {
+    const hardcap = await this.crowdsale.getHardCap();
+
+    hardcap[0].div(1e18).toNumber().should.be.equal(parameters.STAGES.MAIN_SALE_3.HARDCAP.CALL);
+    hardcap[1].div(1e18).toNumber().should.be.equal(parameters.STAGES.MAIN_SALE_3.HARDCAP.CALLG);
+
+    increaseTime(parameters.STAGES.MAIN_SALE_3.DURATION * 3600 * 24);
+  });
+
+  it("The hardcap should be right for MAIN_SALE_4", async function() {
+    const hardcap = await this.crowdsale.getHardCap();
+
+    hardcap[0].div(1e18).toNumber().should.be.equal(parameters.STAGES.MAIN_SALE_4.HARDCAP.CALL);
+    hardcap[1].div(1e18).toNumber().should.be.equal(parameters.STAGES.MAIN_SALE_4.HARDCAP.CALLG);
+
+    increaseTime(parameters.STAGES.MAIN_SALE_4.DURATION * 3600 * 24);
   });
 });

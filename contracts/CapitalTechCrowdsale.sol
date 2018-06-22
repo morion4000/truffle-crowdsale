@@ -2,7 +2,8 @@
 Capital Technologies & Research - Capital (CALL) & CapitalGAS (CALLG) - Crowdsale Smart Contract
 https://www.mycapitalco.in
 */
-pragma solidity ^0.4.18;
+pragma solidity 0.4.24;
+
 import './CALLGToken.sol';
 import './CALLToken.sol';
 import './TeamVault.sol';
@@ -71,7 +72,8 @@ contract CapitalTechCrowdsale is Ownable {
     callgDistributed = 1575000000 * 10 ** decimals;
     callSoftCap = 18049500 * 10 ** decimals;
     callgSoftCap = 3609900000 * 10 ** decimals;
-    maxContributionPerAddress = 1500 ether;
+    //maxContributionPerAddress = 1500 ether;
+    maxContributionPerAddress = 150000 ether;
     minInvestment = 0.01 ether;
     is_finalized = false;
     powered_up = true;
@@ -199,8 +201,6 @@ contract CapitalTechCrowdsale is Ownable {
     require(contributions[_beneficiary].add(weiAmount) <= maxContributionPerAddress);
     uint256 call_tokens = getAmountForCurrentStage(weiAmount);
     uint256 callg_tokens = call_tokens.mul(200);
-    require(callDistributed.add(call_tokens) <= _hardcapCall);
-    require(callgDistributed.add(callg_tokens) <= _hardcapCallg);
     weiRaised = weiRaised.add(weiAmount);
     callDistributed = callDistributed.add(call_tokens);
     callgDistributed = callgDistributed.add(callg_tokens);
@@ -223,8 +223,6 @@ contract CapitalTechCrowdsale is Ownable {
     require(_to != address(0));
     require(_amount > 0);
     (uint _hardcapCall, uint _hardcapCallg) = getHardCap();
-    require(callDistributed.add(_amount) <= _hardcapCall);
-    require(callgDistributed.add(_amount.mul(200)) <= _hardcapCallg);
     callDistributed = callDistributed.add(_amount);
     callgDistributed = callgDistributed.add(_amount.mul(200));
     MintableToken(token_call).mint(_to, _amount);
@@ -239,7 +237,7 @@ contract CapitalTechCrowdsale is Ownable {
     userHistory[_beneficiary] = 0;
     vault.refund(_beneficiary);
   }
-  function goalReached() public returns (bool) {
+  function goalReached() public view returns (bool) {
     if (callDistributed >= callSoftCap && callgDistributed >= callgSoftCap) {
       return true;
     } else {
