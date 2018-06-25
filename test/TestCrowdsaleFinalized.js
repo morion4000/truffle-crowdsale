@@ -38,9 +38,6 @@ contract("TestCrowdsaleFinalized", function([owner, wallet, investor, otherInves
       value: new BigNumber(15000).mul(1e18)
     });
 
-    increaseTime(parameters.STAGES.PRIVATE_SALE.DURATION * 3600 * 24);
-    await this.crowdsale.updateStage();
-
     increaseTime(parameters.STAGES.PRE_SALE.DURATION * 3600 * 24);
     await this.crowdsale.updateStage();
 

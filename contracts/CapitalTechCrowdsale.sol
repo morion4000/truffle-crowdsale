@@ -174,21 +174,26 @@ contract CapitalTechCrowdsale is Ownable {
     return (hardcap_call.mul(10 ** decimals), hardcap_callg.mul(10 ** decimals));
   }
   function updateStage() public {
+    _updateStage(0);
+  }
+  function _updateStage(uint256 weiAmount) internal {
     uint _duration = stages_duration[uint(stage)];
+    uint call_tokens = getAmountForCurrentStage(weiAmount);
+    uint callg_tokens = call_tokens.mul(200);
     (uint _hardcapCall, uint _hardcapCallg) = getHardCap();
-    if(stageStartTime.add(_duration) <= block.timestamp || callDistributed >= _hardcapCall || callgDistributed >= _hardcapCallg) {
+    if(stageStartTime.add(_duration) <= block.timestamp || callDistributed.add(call_tokens) >= _hardcapCall || callgDistributed.add(callg_tokens) >= _hardcapCallg) {
       stages next_stage = _getNextStage();
-      stage = next_stage;
       if (next_stage != stages.FINALIZED) {
         emit StageChanged(stage, next_stage, stageStartTime);
+        stage = next_stage;
         stageStartTime = block.timestamp;
       } else {
+        stage = next_stage;
         finalization();
       }
     }
   }
   function buyTokens(address _beneficiary) public payable {
-    updateStage();
     require(!is_finalized);
     if (_beneficiary == address(0)) {
       _beneficiary = msg.sender;
@@ -199,6 +204,7 @@ contract CapitalTechCrowdsale is Ownable {
     require(_beneficiary != address(0));
     require(weiAmount >= minInvestment);
     require(contributions[_beneficiary].add(weiAmount) <= maxContributionPerAddress);
+    _updateStage(weiAmount);
     uint256 call_tokens = getAmountForCurrentStage(weiAmount);
     uint256 callg_tokens = call_tokens.mul(200);
     weiRaised = weiRaised.add(weiAmount);
@@ -218,10 +224,10 @@ contract CapitalTechCrowdsale is Ownable {
     stages_duration[uint(stage)] = stages_duration[uint(stage)].add(date);
   }
   function transferTokens(address _to, uint256 _amount) public onlyOwner {
-    updateStage();
     require(!is_finalized);
     require(_to != address(0));
     require(_amount > 0);
+    _updateStage(0);
     (uint _hardcapCall, uint _hardcapCallg) = getHardCap();
     callDistributed = callDistributed.add(_amount);
     callgDistributed = callgDistributed.add(_amount.mul(200));
