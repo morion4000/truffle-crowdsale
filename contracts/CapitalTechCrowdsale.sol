@@ -183,11 +183,12 @@ contract CapitalTechCrowdsale is Ownable {
     (uint _hardcapCall, uint _hardcapCallg) = getHardCap();
     if(stageStartTime.add(_duration) <= block.timestamp || callDistributed.add(call_tokens) >= _hardcapCall || callgDistributed.add(callg_tokens) >= _hardcapCallg) {
       stages next_stage = _getNextStage();
-      stage = next_stage;
       if (next_stage != stages.FINALIZED) {
         emit StageChanged(stage, next_stage, stageStartTime);
+        stage = next_stage;
         stageStartTime = block.timestamp;
       } else {
+        stage = next_stage;
         finalization();
       }
     }
@@ -203,7 +204,7 @@ contract CapitalTechCrowdsale is Ownable {
     require(_beneficiary != address(0));
     require(weiAmount >= minInvestment);
     require(contributions[_beneficiary].add(weiAmount) <= maxContributionPerAddress);
-    _updateStage(0);
+    _updateStage(weiAmount);
     uint256 call_tokens = getAmountForCurrentStage(weiAmount);
     uint256 callg_tokens = call_tokens.mul(200);
     weiRaised = weiRaised.add(weiAmount);
