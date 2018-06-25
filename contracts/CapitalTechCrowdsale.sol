@@ -174,11 +174,16 @@ contract CapitalTechCrowdsale is Ownable {
     return (hardcap_call.mul(10 ** decimals), hardcap_callg.mul(10 ** decimals));
   }
   function updateStage() public {
-    _updateStage(0);
+    _updateStage(0, 0);
   }
-  function _updateStage(uint256 weiAmount) internal {
+  function _updateStage(uint256 weiAmount, uint256 callAmount) internal {
     uint _duration = stages_duration[uint(stage)];
-    uint call_tokens = getAmountForCurrentStage(weiAmount);
+    uint call_tokens = 0;
+    if (weiAmount != 0) {
+      call_tokens = getAmountForCurrentStage(weiAmount);
+    } else {
+      call_tokens = callAmount;
+    }
     uint callg_tokens = call_tokens.mul(200);
     (uint _hardcapCall, uint _hardcapCallg) = getHardCap();
     if(stageStartTime.add(_duration) <= block.timestamp || callDistributed.add(call_tokens) >= _hardcapCall || callgDistributed.add(callg_tokens) >= _hardcapCallg) {
@@ -204,7 +209,7 @@ contract CapitalTechCrowdsale is Ownable {
     require(_beneficiary != address(0));
     require(weiAmount >= minInvestment);
     require(contributions[_beneficiary].add(weiAmount) <= maxContributionPerAddress);
-    _updateStage(weiAmount);
+    _updateStage(weiAmount, 0);
     uint256 call_tokens = getAmountForCurrentStage(weiAmount);
     uint256 callg_tokens = call_tokens.mul(200);
     weiRaised = weiRaised.add(weiAmount);
@@ -227,8 +232,7 @@ contract CapitalTechCrowdsale is Ownable {
     require(!is_finalized);
     require(_to != address(0));
     require(_amount > 0);
-    _updateStage(0);
-    (uint _hardcapCall, uint _hardcapCallg) = getHardCap();
+    _updateStage(0, _amount);
     callDistributed = callDistributed.add(_amount);
     callgDistributed = callgDistributed.add(_amount.mul(200));
     MintableToken(token_call).mint(_to, _amount);
