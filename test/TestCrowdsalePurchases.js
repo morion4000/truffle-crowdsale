@@ -68,7 +68,6 @@ contract("TestCrowdsalePurchases", function([owner, wallet, investor, otherInves
   });
 
   it("The investor should be able to buy tokens in PRIVATE_SALE", async function() {
-    // TODO: Test transferTokens
     let amount = new BigNumber(1).mul(1e18);
     let purchase = await this.crowdsale.buyTokens(investor, {
       from: investor,
