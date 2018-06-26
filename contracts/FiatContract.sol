@@ -26,7 +26,7 @@ contract FiatContract {
     constructor() {
         creator = msg.sender;
         sender = msg.sender;
-        FiatContract.update(0, "ETH", 1000000000000000000, 16823602840000, 19641330040000, 22457827430000);
+        FiatContract.update(0, "ETH", 1000000000000000000, 1682360284000, 19641330040000, 22457827430000);
     }
 
     // returns the Token struct
