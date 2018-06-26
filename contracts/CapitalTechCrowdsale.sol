@@ -188,12 +188,11 @@ contract CapitalTechCrowdsale is Ownable {
     (uint256 _hardcapCall, uint256 _hardcapCallg) = getHardCap();
     if(stageStartTime.add(_duration) <= block.timestamp || callDistributed.add(call_tokens) >= _hardcapCall || callgDistributed.add(callg_tokens) >= _hardcapCallg) {
       stages next_stage = _getNextStage();
+      emit StageChanged(stage, next_stage, stageStartTime);
+      stage = next_stage;
       if (next_stage != stages.FINALIZED) {
-        emit StageChanged(stage, next_stage, stageStartTime);
-        stage = next_stage;
         stageStartTime = block.timestamp;
       } else {
-        stage = next_stage;
         finalization();
       }
     }
@@ -223,6 +222,7 @@ contract CapitalTechCrowdsale is Ownable {
     vault.deposit.value(msg.value)(msg.sender);
   }
   function finalize() onlyOwner public {
+    stage = stages.FINALIZED;
     finalization();
   }
   function extendPeriod(uint256 date) public onlyOwner {
