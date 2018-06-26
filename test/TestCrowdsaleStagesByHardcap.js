@@ -29,22 +29,24 @@ contract("TestCrowdsaleStagesByHardcap", function([owner, wallet, investor, othe
   });
 
   beforeEach(async function() {
-    await this.crowdsale.updateStage()
-
     await advanceBlock();
   });
 
   it("The stage should be PRIVATE_SALE", async function() {
     const stage = await this.crowdsale.stage();
-    const amount = parameters.STAGES.PRIVATE_SALE.HARDCAP.ETHER + 1;
-    /*
-    const amount = parseInt(parameters.STAGES.PRIVATE_SALE.HARDCAP.CALL / parameters.STAGES.PRIVATE_SALE.CALL_PER_ETHER) - 200;
-    const callDistributed = await this.crowdsale.callDistributed();
-    const callgDistributed = await this.crowdsale.callgDistributed();
-    const hardcap = await this.crowdsale.getHardCap();
-    */
+    const amount = parameters.STAGES.PRE_SALE.HARDCAP.ETHER;
 
     stage.toNumber().should.be.equal(parameters.STAGES.PRIVATE_SALE.ID);
+
+    /*
+    const callDistributed1 = await this.crowdsale.callDistributed();
+    const callgDistributed1 = await this.crowdsale.callgDistributed();
+    const hardcap1 = await this.crowdsale.getHardCap();
+    console.log('callDistributed', callDistributed1.div(1e18).toNumber());
+    console.log('callgDistributed', callgDistributed1.div(1e18).toNumber());
+    console.log('callHardcap', hardcap1[0].div(1e18).toNumber());
+    console.log('callgHardcap', hardcap1[1].div(1e18).toNumber());
+    */
 
     await this.crowdsale.buyTokens(investor, {
       from: investor,
@@ -52,44 +54,20 @@ contract("TestCrowdsaleStagesByHardcap", function([owner, wallet, investor, othe
     });
 
     /*
-    console.log('hardcap', hardcap[0]);
-    console.log('distributed', callDistributed);
-
-    console.log('hardcap g', hardcap[1]);
-    console.log('distributed g', callgDistributed);
-
-    console.log('--------');
-
-    const _callDistributed = await this.crowdsale.callDistributed();
-    const _callgDistributed = await this.crowdsale.callgDistributed();
-    const _hardcap = await this.crowdsale.getHardCap();
-
-    console.log('hardcap', _hardcap[0]);
-    console.log('distributed', _callDistributed);
-
-    console.log('hardcap g', _hardcap[1]);
-    console.log('distributed g', _callgDistributed);
-    */
-    /*
-    for (var i=0; i<20; i++) {
-      await this.crowdsale.buyTokens(investor, {
-        from: investor,
-        value: new BigNumber(100).mul(1e18)
-      }).catch((function(i) {
-        return function(err) {
-          console.log('Transaction no', i);
-          console.error(err);
-        };
-      })(i));
-
-      await advanceBlock();
-    }
+    console.log('--------------');
+    const callDistributed2 = await this.crowdsale.callDistributed();
+    const callgDistributed2 = await this.crowdsale.callgDistributed();
+    const hardcap2 = await this.crowdsale.getHardCap();
+    console.log('callDistributed', callDistributed2.div(1e18).toNumber());
+    console.log('callgDistributed', callgDistributed2.div(1e18).toNumber());
+    console.log('callHardcap', hardcap2[0].div(1e18).toNumber());
+    console.log('callgHardcap', hardcap2[1].div(1e18).toNumber());
     */
   });
 
   it("The stage should be PRE_SALE", async function() {
     const stage = await this.crowdsale.stage();
-    const amount = parameters.STAGES.PRE_SALE.HARDCAP.ETHER + 1;
+    const amount = parameters.STAGES.MAIN_SALE_1.HARDCAP.ETHER;
 
     stage.toNumber().should.be.equal(parameters.STAGES.PRE_SALE.ID);
 
@@ -101,7 +79,7 @@ contract("TestCrowdsaleStagesByHardcap", function([owner, wallet, investor, othe
 
   it("The stage should be MAIN_SALE_1", async function() {
     const stage = await this.crowdsale.stage();
-    const amount = parameters.STAGES.MAIN_SALE_1.HARDCAP.ETHER + 1;
+    const amount = parameters.STAGES.MAIN_SALE_2.HARDCAP.ETHER;
 
     stage.toNumber().should.be.equal(parameters.STAGES.MAIN_SALE_1.ID);
 
@@ -113,7 +91,7 @@ contract("TestCrowdsaleStagesByHardcap", function([owner, wallet, investor, othe
 
   it("The stage should be MAIN_SALE_2", async function() {
     const stage = await this.crowdsale.stage();
-    const amount = parameters.STAGES.MAIN_SALE_2.HARDCAP.ETHER + 1;
+    const amount = parameters.STAGES.MAIN_SALE_3.HARDCAP.ETHER;
 
     stage.toNumber().should.be.equal(parameters.STAGES.MAIN_SALE_2.ID);
 
@@ -125,7 +103,7 @@ contract("TestCrowdsaleStagesByHardcap", function([owner, wallet, investor, othe
 
   it("The stage should be MAIN_SALE_3", async function() {
     const stage = await this.crowdsale.stage();
-    const amount = parameters.STAGES.MAIN_SALE_3.HARDCAP.ETHER + 1;
+    const amount = parameters.STAGES.MAIN_SALE_4.HARDCAP.ETHER;
 
     stage.toNumber().should.be.equal(parameters.STAGES.MAIN_SALE_3.ID);
 
@@ -137,19 +115,26 @@ contract("TestCrowdsaleStagesByHardcap", function([owner, wallet, investor, othe
 
   it("The stage should be MAIN_SALE_4", async function() {
     const stage = await this.crowdsale.stage();
-    const amount = parameters.STAGES.MAIN_SALE_4.HARDCAP.ETHER + 1;
+    const amount = parameters.STAGES.MAIN_SALE_4.HARDCAP.ETHER;
 
     stage.toNumber().should.be.equal(parameters.STAGES.MAIN_SALE_4.ID);
+  });
+
+  it("The stage MAIN_SALE_4 should not allow overflow", async function() {
+    const amount = parameters.STAGES.MAIN_SALE_4.HARDCAP.ETHER;
 
     await this.crowdsale.buyTokens(investor, {
       from: investor,
       value: new BigNumber(amount).mul(1e18)
-    });
+    }).should.be.rejectedWith('VM Exception while processing transaction: revert');
   });
 
-  it("The stage should be FINALIZED", async function() {
-    const stage = await this.crowdsale.stage();
+  it("The stage MAIN_SALE_4 should be advanced manually", async function() {
+    await this.crowdsale.finalize({
+      from: owner
+    });
 
+    const stage = await this.crowdsale.stage();
     stage.toNumber().should.be.equal(parameters.STAGES.FINALIZED.ID);
   });
 });
