@@ -100,6 +100,14 @@ contract CapitalTechCrowdsale is Ownable {
     MintableToken(token_callg).mint(bountyVault, _amount.mul(200));
     emit TokenTransfer(msg.sender, bountyVault, _amount, _amount, _amount.mul(200));
   }
+  function withdrawBounty(address _beneficiary) public onlyOwner {
+    require(distributed_bounty);
+    bountyVault.withdrawBounty(_beneficiary);
+  }
+  function withdrawTeam(address _beneficiary) public onlyOwner {
+    require(distributed_team);
+    teamVault.withdrawTeam(_beneficiary);
+  }
   function getUserContribution(address _beneficiary) public view returns (uint256) {
     return contributions[_beneficiary];
   }

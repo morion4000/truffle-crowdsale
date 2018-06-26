@@ -22,8 +22,7 @@ contract("TestBountyVault", function([owner, wallet, investor, otherInvestor]) {
     await advanceBlock();
 
     this.crowdsale = await CapitalTechCrowdsale.deployed();
-    this.bounty = await BountyVault.deployed();
-    //this.bounty = BountyVault.at(await this.crowdsale.bountyVault());
+    this.bounty = BountyVault.at(await this.crowdsale.bountyVault());
     this.call_token = CALLToken.at(await this.crowdsale.token_call());
     this.callg_token = CALLGToken.at(await this.crowdsale.token_callg());
   });
@@ -48,12 +47,14 @@ contract("TestBountyVault", function([owner, wallet, investor, otherInvestor]) {
   });
 
   it("The contract should allow funds to be withdrawn", async function() {
-    const call = await this.bounty.withdrawBounty(investor, {
+    await this.crowdsale.withdrawBounty(investor, {
       from: owner
     });
 
-    //const address = await this.crowdsale.bountyVault();
-    //const balance = await this.call_token.balanceOf.call(investor);
-    //balance.div(1e18).toNumber().should.be.equal(2625000);
+    const balance = await this.call_token.balanceOf.call(investor);
+    const balance_callg = await this.callg_token.balanceOf.call(investor);
+
+    balance.div(1e18).toNumber().should.be.equal(2625000);
+    balance_callg.div(1e18).toNumber().should.be.equal(525000000);
   });
 });
