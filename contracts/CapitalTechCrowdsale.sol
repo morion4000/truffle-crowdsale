@@ -10,7 +10,7 @@ import './TeamVault.sol';
 import './BountyVault.sol';
 import 'openzeppelin-solidity/contracts/crowdsale/distribution/utils/RefundVault.sol';
 contract FiatContract {
-  function USD(uint _id) public constant returns (uint256);
+  function USD(uint256 _id) public constant returns (uint256);
 }
 contract CapitalTechCrowdsale is Ownable {
   using SafeMath for uint256;
@@ -33,7 +33,7 @@ contract CapitalTechCrowdsale is Ownable {
   bool public distributed_bounty;
   mapping(address => uint256) public contributions;
   mapping(address => uint256) public userHistory;
-  mapping(uint => uint) public stages_duration;
+  mapping(uint256 => uint256) public stages_duration;
   uint256 public callSoftCap;
   uint256 public callgSoftCap;
   uint256 public callDistributed;
@@ -41,9 +41,9 @@ contract CapitalTechCrowdsale is Ownable {
   uint256 public constant decimals = 18;
   event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount_call, uint256 amount_callg);
   event TokenTransfer(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount_call, uint256 amount_callg);
-  event StageChanged(stages stage, stages next_stage, uint stageStartTime);
-  event GoalReached(uint callSoftCap, uint callgSoftCap);
-  event Finalized(uint callDistributed, uint callgDistributed);
+  event StageChanged(stages stage, stages next_stage, uint256 stageStartTime);
+  event GoalReached(uint256 callSoftCap, uint256 callgSoftCap);
+  event Finalized(uint256 callDistributed, uint256 callgDistributed);
   function () external payable {
     buyTokens(msg.sender);
   }
@@ -77,16 +77,16 @@ contract CapitalTechCrowdsale is Ownable {
     minInvestment = 0.01 ether;
     is_finalized = false;
     powered_up = true;
-    stages_duration[uint(stages.PRIVATE_SALE)] = 30 days;
-    stages_duration[uint(stages.PRE_SALE)] = 30 days;
-    stages_duration[uint(stages.MAIN_SALE_1)] = 7 days;
-    stages_duration[uint(stages.MAIN_SALE_2)] = 7 days;
-    stages_duration[uint(stages.MAIN_SALE_3)] = 7 days;
-    stages_duration[uint(stages.MAIN_SALE_4)] = 7 days;
+    stages_duration[uint256(stages.PRIVATE_SALE)] = 30 days;
+    stages_duration[uint256(stages.PRE_SALE)] = 30 days;
+    stages_duration[uint256(stages.MAIN_SALE_1)] = 7 days;
+    stages_duration[uint256(stages.MAIN_SALE_2)] = 7 days;
+    stages_duration[uint256(stages.MAIN_SALE_3)] = 7 days;
+    stages_duration[uint256(stages.MAIN_SALE_4)] = 7 days;
   }
   function distributeTeam() public onlyOwner {
     require(!distributed_team);
-    uint _amount = 5250000 * 10 ** decimals;
+    uint256 _amount = 5250000 * 10 ** decimals;
     distributed_team = true;
     MintableToken(token_call).mint(teamVault, _amount);
     MintableToken(token_callg).mint(teamVault, _amount.mul(200));
@@ -94,7 +94,7 @@ contract CapitalTechCrowdsale is Ownable {
   }
   function distributeBounty() public onlyOwner {
     require(!distributed_bounty);
-    uint _amount = 2625000 * 10 ** decimals;
+    uint256 _amount = 2625000 * 10 ** decimals;
     distributed_bounty = true;
     MintableToken(token_call).mint(bountyVault, _amount);
     MintableToken(token_callg).mint(bountyVault, _amount.mul(200));
@@ -109,7 +109,7 @@ contract CapitalTechCrowdsale is Ownable {
   function getReferrals(address[] _beneficiaries) public view returns (address[], uint256[]) {
   	address[] memory addrs = new address[](_beneficiaries.length);
   	uint256[] memory funds = new uint256[](_beneficiaries.length);
-  	for (uint i = 0; i < _beneficiaries.length; i++) {
+  	for (uint256 i = 0; i < _beneficiaries.length; i++) {
   		addrs[i] = _beneficiaries[i];
   		funds[i] = getUserHistory(_beneficiaries[i]);
   	}
@@ -149,9 +149,9 @@ contract CapitalTechCrowdsale is Ownable {
     }
     return next_stage;
   }
-  function getHardCap() public view returns (uint, uint) {
-    uint hardcap_call;
-    uint hardcap_callg;
+  function getHardCap() public view returns (uint256, uint256) {
+    uint256 hardcap_call;
+    uint256 hardcap_callg;
     if (stage == stages.PRIVATE_SALE) {
       hardcap_call = 10842563;
       hardcap_callg = 2168512500;
@@ -177,15 +177,15 @@ contract CapitalTechCrowdsale is Ownable {
     _updateStage(0, 0);
   }
   function _updateStage(uint256 weiAmount, uint256 callAmount) internal {
-    uint _duration = stages_duration[uint(stage)];
-    uint call_tokens = 0;
+    uint256 _duration = stages_duration[uint256(stage)];
+    uint256 call_tokens = 0;
     if (weiAmount != 0) {
       call_tokens = getAmountForCurrentStage(weiAmount);
     } else {
       call_tokens = callAmount;
     }
-    uint callg_tokens = call_tokens.mul(200);
-    (uint _hardcapCall, uint _hardcapCallg) = getHardCap();
+    uint256 callg_tokens = call_tokens.mul(200);
+    (uint256 _hardcapCall, uint256 _hardcapCallg) = getHardCap();
     if(stageStartTime.add(_duration) <= block.timestamp || callDistributed.add(call_tokens) >= _hardcapCall || callgDistributed.add(callg_tokens) >= _hardcapCallg) {
       stages next_stage = _getNextStage();
       if (next_stage != stages.FINALIZED) {
@@ -203,7 +203,7 @@ contract CapitalTechCrowdsale is Ownable {
     if (_beneficiary == address(0)) {
       _beneficiary = msg.sender;
     }
-    (uint _hardcapCall, uint _hardcapCallg) = getHardCap();
+    (uint256 _hardcapCall, uint256 _hardcapCallg) = getHardCap();
     uint256 weiAmount = msg.value;
     require(weiAmount > 0);
     require(_beneficiary != address(0));
@@ -225,8 +225,8 @@ contract CapitalTechCrowdsale is Ownable {
   function finalize() onlyOwner public {
     finalization();
   }
-  function extendPeriod(uint date) public onlyOwner {
-    stages_duration[uint(stage)] = stages_duration[uint(stage)].add(date);
+  function extendPeriod(uint256 date) public onlyOwner {
+    stages_duration[uint256(stage)] = stages_duration[uint256(stage)].add(date);
   }
   function transferTokens(address _to, uint256 _amount) public onlyOwner {
     require(!is_finalized);
