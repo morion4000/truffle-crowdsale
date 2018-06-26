@@ -3,7 +3,7 @@ const CALLGToken = artifacts.require("./CALLGToken.sol");
 const CALLToken = artifacts.require("./CALLToken.sol");
 const CapitalTechCrowdsale = artifacts.require("./CapitalTechCrowdsale.sol");
 module.exports = function(deployer, network, accounts) {
-  const wallet = accounts[1];
+  const wallet = accounts[0];
   return deployer
     .then(() => {
       return deployer.deploy(FiatContract);
