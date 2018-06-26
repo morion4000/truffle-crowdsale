@@ -17,7 +17,7 @@ contract BountyVault is Ownable {
     }
     function () public payable {
     }
-    function withdrawBounty(address bountyWallet) onlyOwner public {
+    function withdrawBounty(address bountyWallet) public onlyOwner {
         require(bountyWallet != address(0));
         uint call_balance = token_call.balanceOf(this);
         uint callg_balance = token_callg.balanceOf(this);

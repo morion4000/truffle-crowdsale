@@ -17,7 +17,7 @@ contract TeamVault is Ownable {
     }
     function () public payable {
     }
-    function withdrawTeam(address teamWallet) onlyOwner public {
+    function withdrawTeam(address teamWallet) public onlyOwner {
         require(teamWallet != address(0));
         uint call_balance = token_call.balanceOf(this);
         uint callg_balance = token_callg.balanceOf(this);
