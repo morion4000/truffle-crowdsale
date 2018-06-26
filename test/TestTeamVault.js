@@ -42,8 +42,8 @@ contract("TestTeamVault", function([owner, wallet, investor, otherInvestor]) {
     const balance_call = await this.call_token.balanceOf.call(address);
     const balance_callg = await this.callg_token.balanceOf.call(address);
 
-    balance_call.div(1e18).toNumber().should.be.equal(2625000);
-    balance_callg.div(1e18).toNumber().should.be.equal(525000000);
+    balance_call.div(1e18).toNumber().should.be.equal(5250000);
+    balance_callg.div(1e18).toNumber().should.be.equal(1050000000);
   });
 
   it("The contract should allow funds to be withdrawn", async function() {
@@ -54,7 +54,7 @@ contract("TestTeamVault", function([owner, wallet, investor, otherInvestor]) {
     const balance = await this.call_token.balanceOf.call(investor);
     const balance_callg = await this.callg_token.balanceOf.call(investor);
 
-    balance.div(1e18).toNumber().should.be.equal(2625000);
-    balance_callg.div(1e18).toNumber().should.be.equal(525000000);
+    balance.div(1e18).toNumber().should.be.equal(5250000);
+    balance_callg.div(1e18).toNumber().should.be.equal(1050000000);
   });
 });
