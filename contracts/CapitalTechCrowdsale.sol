@@ -264,9 +264,14 @@ contract CapitalTechCrowdsale is Ownable {
       return false;
     }
   }
+  function finishMinting() public onlyOwner {
+    MintableToken(token_call).finishMinting();
+    MintableToken(token_callg).finishMinting();
+  }
   function finalization() internal {
     require(!is_finalized);
     is_finalized = true;
+    finishMinting();
     emit Finalized(callDistributed, callgDistributed);
     if (goalReached()) {
       emit GoalReached(callSoftCap, callgSoftCap);
