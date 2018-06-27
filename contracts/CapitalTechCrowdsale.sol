@@ -7,10 +7,8 @@ import './CALLGToken.sol';
 import './CALLToken.sol';
 import './TeamVault.sol';
 import './BountyVault.sol';
+import './FiatContract.sol';
 import 'openzeppelin-solidity/contracts/crowdsale/distribution/utils/RefundVault.sol';
-contract FiatContract {
-  function USD(uint _id) public constant returns (uint256);
-}
 contract CapitalTechCrowdsale is Ownable {
   using SafeMath for uint256;
   ERC20 public token_call;

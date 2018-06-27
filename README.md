@@ -5,3 +5,4 @@
 This repository contains Solidity smart contract codes. The repo currently implements [EIP20](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md) tokens
 
 `truffle-flattener contracts/* > result.sol`
+`solidity_flattener contracts/CapitalTechCrowdsale.sol --solc-paths=openzeppelin-solidity=$(pwd)/node_modules/openzeppelin-solidity/ > result.sol`
