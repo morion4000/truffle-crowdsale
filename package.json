@@ -10,7 +10,8 @@
   "openzeppelin-solidity": "^1.10.0"
  },
  "scripts": {
-  "migrate:ropsten": "truffle migrate --network ropsten"
+  "migrate:ropsten": "truffle migrate --network ropsten",
+  "build-contracts": "sol-merger \"./contracts/*.sol\" ./build"
  },
  "files": [
   "build/"
@@ -24,6 +25,7 @@
   "chai-bignumber": "^2.0.2",
   "truffle": "^4.1.12",
   "truffle-flattener": "^1.2.5",
+  "sol-merger": "^0.1.2",
   "truffle-hdwallet-provider": "^0.0.5"
  }
 }
