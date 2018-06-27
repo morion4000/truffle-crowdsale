@@ -28,14 +28,6 @@ contract("TestCapitalTechCrowdsalePowerUp", function([owner, wallet, investor, o
 
   beforeEach(async function() {
     await advanceBlock();
-    /*
-    this.crowdsale = await CapitalTechCrowdsale.new(owner, FiatContract.address, CALLToken.address, CALLGToken.address);
-
-    this.call_token = CALLToken.at(await this.crowdsale.token_call());
-    this.callg_token = CALLGToken.at(await this.crowdsale.token_callg());
-
-    await this.crowdsale.powerUpContract();
-    */
   });
 
   it("The contracts should be deployed", async function() {
@@ -64,7 +56,7 @@ contract("TestCapitalTechCrowdsalePowerUp", function([owner, wallet, investor, o
     callgDistributed.div(1e18).toNumber().should.be.equal(parameters.INITIAL_DISTRIBUTION.CALLG);
     maxContributionPerAddress.div(1e18).toNumber().should.be.equal(parameters.CONTRIBUTION_PER_ADDRESS.MAX);
     minInvestment.div(1e18).toNumber().should.be.equal(parameters.CONTRIBUTION_PER_ADDRESS.MIN);
-    walletCrowdsale.should.be.equal(wallet);
+    walletCrowdsale.should.be.equal(owner);
     weiRaised.toNumber().should.be.equal(0);
     callSoftCap.div(1e18).toNumber().should.be.equal(parameters.SOFT_CAP.CALL);
     callgSoftCap.div(1e18).toNumber().should.be.equal(parameters.SOFT_CAP.CALLG);

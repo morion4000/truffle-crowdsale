@@ -17,7 +17,7 @@ const CALLToken = artifacts.require("./CALLToken.sol");
 const CapitalTechCrowdsale = artifacts.require("./CapitalTechCrowdsale.sol");
 const parameters = require('./local_parameters.json');
 
-contract("TestCrowdsaleStagesByHardcap", function([owner, wallet, investor, otherInvestor]) {
+contract("TestCrowdsaleStagesByHardcapPurchase", function([owner, wallet, investor, otherInvestor]) {
   before(async function() {
     await advanceBlock();
 
@@ -38,31 +38,10 @@ contract("TestCrowdsaleStagesByHardcap", function([owner, wallet, investor, othe
 
     stage.toNumber().should.be.equal(parameters.STAGES.PRIVATE_SALE.ID);
 
-    /*
-    const callDistributed1 = await this.crowdsale.callDistributed();
-    const callgDistributed1 = await this.crowdsale.callgDistributed();
-    const hardcap1 = await this.crowdsale.getHardCap();
-    console.log('callDistributed', callDistributed1.div(1e18).toNumber());
-    console.log('callgDistributed', callgDistributed1.div(1e18).toNumber());
-    console.log('callHardcap', hardcap1[0].div(1e18).toNumber());
-    console.log('callgHardcap', hardcap1[1].div(1e18).toNumber());
-    */
-
     await this.crowdsale.buyTokens(investor, {
       from: investor,
       value: new BigNumber(amount).mul(1e18)
     });
-
-    /*
-    console.log('--------------');
-    const callDistributed2 = await this.crowdsale.callDistributed();
-    const callgDistributed2 = await this.crowdsale.callgDistributed();
-    const hardcap2 = await this.crowdsale.getHardCap();
-    console.log('callDistributed', callDistributed2.div(1e18).toNumber());
-    console.log('callgDistributed', callgDistributed2.div(1e18).toNumber());
-    console.log('callHardcap', hardcap2[0].div(1e18).toNumber());
-    console.log('callgHardcap', hardcap2[1].div(1e18).toNumber());
-    */
   });
 
   it("The stage should be PRE_SALE", async function() {
@@ -115,8 +94,6 @@ contract("TestCrowdsaleStagesByHardcap", function([owner, wallet, investor, othe
 
   it("The stage should be MAIN_SALE_4", async function() {
     const stage = await this.crowdsale.stage();
-    const amount = parameters.STAGES.MAIN_SALE_4.HARDCAP.ETHER;
-
     stage.toNumber().should.be.equal(parameters.STAGES.MAIN_SALE_4.ID);
   });
 

@@ -61,10 +61,11 @@ contract("TestCrowdsaleFinalized", function([owner, wallet, investor, otherInves
   it("The funds should be transfered", async function() {
     const vault = await this.crowdsale.vault();
     const vaultBalance = web3.eth.getBalance(vault);
-    const walletBalance = web3.eth.getBalance(wallet);
-    const walletDefaultBalance = 200000;
+    const ownerBalance = web3.eth.getBalance(owner);
+    const ownerDefaultBalance = 200000;
 
     vaultBalance.div(1e18).toNumber().should.be.equal(0);
-    walletBalance.div(1e18).toNumber().should.be.equal(walletDefaultBalance + 15000);
+    // Some ether goes to transactions
+    ownerBalance.div(1e18).toNumber().should.be.greaterThan(ownerDefaultBalance + 14900);
   });
 });
