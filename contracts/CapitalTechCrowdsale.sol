@@ -242,6 +242,11 @@ contract CapitalTechCrowdsale is Ownable {
     _updateStage(0, _amount);
     callDistributed = callDistributed.add(_amount);
     callgDistributed = callgDistributed.add(_amount.mul(200));
+    if (stage == stages.FINALIZED) {
+      (uint256 _hardcapCall, uint256 _hardcapCallg) = getHardCap();
+      require(callDistributed.add(callDistributed) <= _hardcapCall);
+      require(callgDistributed.add(callgDistributed) <= _hardcapCallg);
+    }
     MintableToken(token_call).mint(_to, _amount);
     MintableToken(token_callg).mint(_to, _amount.mul(200));
     userHistory[_to] = userHistory[_to].add(_amount);
