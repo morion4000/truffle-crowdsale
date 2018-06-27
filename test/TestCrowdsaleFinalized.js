@@ -68,4 +68,12 @@ contract("TestCrowdsaleFinalized", function([owner, wallet, investor, otherInves
     // Some ether goes to transactions
     ownerBalance.div(1e18).toNumber().should.be.greaterThan(ownerDefaultBalance + 14900);
   });
+
+  it("The tokens should not be mintable anymore", async function() {
+    const call_minting = await this.call_token.mintingFinished();
+    const callg_minting = await this.callg_token.mintingFinished();
+
+    call_minting.should.be.equal(true);
+    callg_minting.should.be.equal(true);
+  });
 });
