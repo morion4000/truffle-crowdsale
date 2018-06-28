@@ -3,7 +3,8 @@ language: node_js
 node_js:
   - "8"
 before_script:
-  - truffle version
-  - npm update
+  - npm install
 script:
-  - npm run migrate:ropsten
+  - ganache-cli -p 7545 -i 5777 -e 200000 > /dev/null &
+  - sleep 5
+  - truffle test

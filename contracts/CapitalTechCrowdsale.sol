@@ -9,6 +9,9 @@ import './TeamVault.sol';
 import './BountyVault.sol';
 import './FiatContract.sol';
 import 'openzeppelin-solidity/contracts/crowdsale/distribution/utils/RefundVault.sol';
+contract FiatContract {
+  function USD(uint _id) constant returns (uint256);
+}
 contract CapitalTechCrowdsale is Ownable {
   using SafeMath for uint256;
   ERC20 public token_call;
@@ -69,8 +72,8 @@ contract CapitalTechCrowdsale is Ownable {
     callgDistributed = 1575000000 * 10 ** decimals;
     callSoftCap = 18049500 * 10 ** decimals;
     callgSoftCap = 3609900000 * 10 ** decimals;
-    //maxContributionPerAddress = 1500 ether;
-    maxContributionPerAddress = 150000 ether;
+    //maxContributionPerAddress = 1500 ether; // Available only in Ethereum's MainNet deployment.
+    maxContributionPerAddress = 150000 ether; // Only for tests.
     minInvestment = 0.01 ether;
     is_finalized = false;
     powered_up = true;
