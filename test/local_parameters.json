@@ -1,3 +1,7 @@
+/*
+These static parameters are for tests only;
+They don't reflect any rates for the Crowdsale.
+*/
 {
   "SOFT_CAP": {
     "CALL": 18049500,
