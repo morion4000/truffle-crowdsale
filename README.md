@@ -16,7 +16,7 @@
 *	**Capital GAS (CALLG)** Token Details
 	*	**Token Address**: **0x1cb3d8997bc39667e9cbb2aa70203f94ecda1422**
 	*	**Token Name**: CAPITAL
-	*	**Token Symbol**: CALL
+	*	**Token Symbol**: CALLG
 	*	**Token Decimals**: 18
 
 ## Contracts
