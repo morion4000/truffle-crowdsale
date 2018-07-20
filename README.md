@@ -4,18 +4,18 @@
 
 **Capital (CALL)** and **Capital GAS (CALLG)** are **ERC-20** compliant cryptocurrencies built on the top of the **[Ethereum][ethereum] blockchain**.
 
-#### [Ethereum's Main Network Details](https://github.com/capital-technologies/truffle-crowdsale/tree/mainnet)
-*	**Crowdsale** Contract Address: **0x6992742729d11386f0efbf5fa5d195aa180b21b0**
+#### Ethereum's Main Network Details
+*	**Crowdsale** Contract Address: **[0xf8c7180ebe451ea8cd357058d0ac16b63b486e77](https://etherscan.io/address/0xf8c7180ebe451ea8cd357058d0ac16b63b486e77#code)**
 
 *	**Capital (CALL)** Token Details
-	*	**Token Address**: **0x0c5d6e276f1b6d51e802343c0eb60ec876964f10**
+	*	**Token Address**: **[0x2c02c801a3324b371ad285c64af372ff1e23f460](https://etherscan.io/address/0x2c02c801a3324b371ad285c64af372ff1e23f460#code)**
 	*	**Token Name**: CAPITAL
 	*	**Token Symbol**: CALL
 	*	**Token Decimals**: 18
 
 *	**Capital GAS (CALLG)** Token Details
-	*	**Token Address**: **0x1cb3d8997bc39667e9cbb2aa70203f94ecda1422**
-	*	**Token Name**: CAPITAL
+	*	**Token Address**: **[0x6c28f85eb1dbc7651ce02f7af1f29890ad084b94](https://etherscan.io/address/0x6c28f85eb1dbc7651ce02f7af1f29890ad084b94#code)**
+	*	**Token Name**: Capital GAS
 	*	**Token Symbol**: CALLG
 	*	**Token Decimals**: 18
 
@@ -38,7 +38,7 @@ Contracts are available in [contracts/](contracts) directory
 	*	**5%** of the total number of **Capital (CALL)** and **Capital GAS (CALLG)** tokens will be allocated to the bounty campaign.
 
 ## Pricing program
-Crowdsale rates are calculated through [Fiat Contract](https://fiatcontract.com/) available at contract address: **0x8055d0504666e2B6942BeB8D6014c964658Ca591**
+Crowdsale rates are calculated through [Fiat Contract](https://fiatcontract.com/) available at contract address: **[0x8055d0504666e2B6942BeB8D6014c964658Ca591](https://etherscan.io/address/0x8055d0504666e2B6942BeB8D6014c964658Ca591#code)**
 
 Prices are different for each stage as following:
 *	Private Sale: **$0.35**
