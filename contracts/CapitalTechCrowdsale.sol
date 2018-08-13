@@ -60,17 +60,18 @@ contract CapitalTechCrowdsale is Ownable {
   function powerUpContract() public onlyOwner {
     require(!powered_up);
     require(!is_finalized);
-    stageStartTime = block.timestamp;
+    // stageStartTime = 1498867200; // Available only in Ethereum's MainNet deployment.
+	stageStartTime = block.timestamp; // Only for tests
     stage = stages.PRIVATE_SALE;
     weiRaised = 0;
   	distributeTeam();
   	distributeBounty();
-	  callDistributed = 7875000 * 10 ** decimals;
+	callDistributed = 7875000 * 10 ** decimals;
     callgDistributed = 1575000000 * 10 ** decimals;
     callSoftCap = 18049500 * 10 ** decimals;
     callgSoftCap = 3609900000 * 10 ** decimals;
-    //maxContributionPerAddress = 1500 ether;
-    maxContributionPerAddress = 150000 ether;
+    //maxContributionPerAddress = 1500 ether; // Available only in Ethereum's MainNet deployment.
+    maxContributionPerAddress = 150000 ether; // Only for tests.
     minInvestment = 0.01 ether;
     is_finalized = false;
     powered_up = true;
@@ -207,7 +208,6 @@ contract CapitalTechCrowdsale is Ownable {
     if (_beneficiary == address(0)) {
       _beneficiary = msg.sender;
     }
-    (uint256 _hardcapCall, uint256 _hardcapCallg) = getHardCap();
     uint256 weiAmount = msg.value;
     require(weiAmount > 0);
     require(_beneficiary != address(0));

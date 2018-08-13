@@ -1,5 +1,5 @@
 {
- "name": "CapitalTechCrowdsale",
+ "name": "capital-tech-contracts-development",
  "version": "1.0.0",
  "directories": {
   "test": "test"
@@ -7,10 +7,9 @@
  "author": "Capital Technologies & Research <office@mycapitalco.in>",
  "license": "MIT",
  "dependencies": {
-  "openzeppelin-solidity": "^1.10.0"
+  "openzeppelin-solidity": "1.10.0"
  },
  "scripts": {
-  "migrate:ropsten": "truffle migrate --network ropsten",
   "build-contracts": "sol-merger \"./contracts/*.sol\" ./build"
  },
  "files": [
@@ -24,8 +23,7 @@
   "chai-as-promised": "^7.1.1",
   "chai-bignumber": "^2.0.2",
   "truffle": "^4.1.12",
-  "truffle-flattener": "^1.2.5",
   "sol-merger": "^0.1.2",
-  "truffle-hdwallet-provider": "^0.0.5"
+  "ganache-cli": "^6.1.4"
  }
 }
